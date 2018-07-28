@@ -48,5 +48,5 @@ func main() {
 	sp := ParseCmdLine(strings.Join(argstr, " "))
 	//fmt.Printf("%+v", sp)
 	libgrequest.PrintTop(sp)
-	//libgrequest.FuzzProc(sp)
+	libgrequest.FuzzProc(sp)
 }
