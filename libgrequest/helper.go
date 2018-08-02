@@ -155,7 +155,6 @@ func FuzzPrintLines(s *State, r *Result) {
 
 // PrintFilter : switch for print filter
 func PrintFilter(s *State, fs string) {
-	fmt.Println("fs", fs)
 	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
 	if string(m[0]) == "s" {
 		s.ShowHide = true
@@ -244,7 +243,7 @@ func PrintHelp() {
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help")
 	fmt.Println("--version                     : Wfuzz version details")
-	fmt.Println("-p addr                       : Use Proxy in format http//ip:port")
+	fmt.Println("-p addr                       : COMING SOON -- Use Proxy in format http//ip:port")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default)")
 	fmt.Println("--follow                      : Follow HTTP redirections")
 	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
