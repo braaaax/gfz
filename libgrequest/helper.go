@@ -239,10 +239,10 @@ func PrintTop(s *State) {
 // PrintHelp :
 func PrintHelp() {
 	//PrintBanner()
-	fmt.Printf("Usage: ./gfuzz.py [options] -w wordlist <url>\n\n")
+	fmt.Printf("Usage: ./grequest [options] -w wordlist <url>\n\n")
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help")
-	fmt.Println("--version                     : Wfuzz version details")
+	fmt.Println("--version                     : grequest version details")
 	fmt.Println("-p addr                       : COMING SOON -- Use Proxy in format http//ip:port")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default)")
 	fmt.Println("--follow                      : Follow HTTP redirections")
@@ -251,5 +251,5 @@ func PrintHelp() {
 	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code/lines/words/chars")
 	fmt.Printf("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code/lines/words/chars\n")
 	fmt.Println("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords wfuzz will replace them with the values of the specified payload.")
-	fmt.Println("Example: - gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
+	fmt.Println("Example: - grequest -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 }
