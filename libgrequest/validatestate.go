@@ -12,6 +12,7 @@ import (
 // Validate :
 func Validate(s *State, argstr, proxy string) {
 	// var proxy string
+	c := SafeCounter{v: make(map[string]int)}
 	f := regexp.MustCompile("--(hc|sc|hl|sl|hw|sw|hh|sh).[0-9a-zA-Z(,|)]*")
 	filterstring := f.FindString(argstr)
 	if len(filterstring) > 0 {
@@ -37,6 +38,8 @@ func Validate(s *State, argstr, proxy string) {
 	}
 	FuzzMapper(argstr, s)
 	var proxyURLFunc func(*http.Request) (*url.URL, error)
+	//
+	//TODO: proxy stuff
 	proxyURLFunc = http.ProxyFromEnvironment
 	if proxy != "" {
 		proxyURL, err := url.Parse(proxy)
@@ -46,9 +49,15 @@ func Validate(s *State, argstr, proxy string) {
 		s.ProxyURL = proxyURL
 		proxyURLFunc = http.ProxyURL(s.ProxyURL)
 	}
+	//
+	//
 	s.Client = &http.Client{
 		Transport: &RedirectHandler{
-			State: s, Transport: &http.Transport{Proxy: proxyURLFunc, TLSClientConfig: &tls.Config{InsecureSkipVerify: s.InsecureSSL}},
+			State: s, 
+			Transport: &http.Transport{
+				Proxy: proxyURLFunc, 
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
 	Code, _ := GoGet(s, s.Url, s.Cookies)

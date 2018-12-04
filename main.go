@@ -21,6 +21,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
 	s.InsecureSSL = libgrequest.ArgBool(str, "-k")
 	s.Quiet = libgrequest.ArgBool(str, "-q")
+	s.Recursive = libgrequest.ArgBool(str, "-r")
 	s.Verbose = false
 	s.NoStatus = false
 	s.IncludeLength = true
@@ -40,7 +41,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 
 func main() {
 	argstr := os.Args
-
 	if len(argstr) == 1 {
 		libgrequest.PrintHelp()
 		return
@@ -48,5 +48,5 @@ func main() {
 	sp := ParseCmdLine(strings.Join(argstr, " "))
 	//fmt.Printf("%+v", sp)
 	libgrequest.PrintTop(sp)
-	libgrequest.FuzzProc(sp)
+	libgrequest.FuzzProc2(sp)
 }

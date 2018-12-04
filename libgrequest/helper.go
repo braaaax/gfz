@@ -1,12 +1,15 @@
 package libgrequest
 
 import (
+	"net/http"
 	"fmt"
 	"os"
 	"os/signal"
 	"regexp"
 	"strconv"
 	"strings"
+	"io/ioutil"
+	"unicode/utf8"
 )
 
 // IntSet :
@@ -210,6 +213,20 @@ func FuzzMapper(str string, s *State) {
 	s.Wordlists = wordlists
 	s.FuzzMap = fm
 	BaseFuzzMap(s)
+}
+
+// comment
+func ProcessResults(r *Result, resp *http.Response) {
+	//set body
+	body, err := ioutil.ReadAll(resp.Body)
+	r.Body = body
+	sbody := string(body)
+	if err == nil {
+		r.Chars = int64(utf8.RuneCountInString(sbody))
+		r.Words = int64(len(strings.Fields(sbody)))
+		newlineRE := regexp.MustCompile("\n")
+		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
+	}
 }
 
 // PrepareSignalHandler : Signal handler straight from gobuster to catch CTRL+C

@@ -50,20 +50,24 @@ type State struct {
 	SignalChan      chan os.Signal
 	Wordlists       []string
 	Quiet           bool
+	Recursive       bool
 	Terminate       bool
 	URLFuzz         string
 	BaseMap         map[string]string
 	Threads         int
+	newurls         []string
 }
+
+//type ResultsProcessor func(r *Result, resp *http.Response)
 
 // Result :
 type Result struct {
-	Url   string
-	Body  []byte
-	Chars int64
-	Words int64
-	Lines int64
-	Code  int64
+	Url       string
+	Body      []byte
+	Chars     int64
+	Words     int64
+	Lines     int64
+	Code      int64
 }
 
 // InitState :

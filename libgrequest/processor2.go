@@ -1,14 +1,13 @@
 package libgrequest
 
 import (
-	//"fmt"
 	"sync"
 )
 
 //func PrintDirResult(){}
 
 // FuzzProc : handle multi-threaded url requests created
-func FuzzProc(s *State) {
+func FuzzProc2(s *State) {
 	PrepareSignalHandler(s)
 
 	urlChan := make(chan string)
@@ -17,7 +16,6 @@ func FuzzProc(s *State) {
 		CallScanWordlist(s.Wordlists[:], s.FuzzMap, s.BaseMap, s.URLFuzz, urlChan, s.Terminate)
 		close(urlChan)
 	}()
-	//s.Printer = PrintResult
 	processorGroup := new(sync.WaitGroup)
 	processorGroup.Add(s.Threads)
 	printerGroup := new(sync.WaitGroup)
@@ -36,7 +34,6 @@ func FuzzProc(s *State) {
 	// reads from resultChan
 	go func() {
 		for r := range resultChan {
-			//fmt.Printf("%+v", &r)
 			s.Printer(s, &r)
 		}
 		printerGroup.Done()
