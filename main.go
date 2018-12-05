@@ -2,6 +2,7 @@ package main
 
 import (
 	//"fmt"
+	"fmt"
 	"os"
 	"strings"
 
@@ -9,6 +10,9 @@ import (
 )
 
 func ParseCmdLine(str string) *libgrequest.State {
+
+	//switch
+
 	// fmt.Println(str)
 	s := libgrequest.InitState()
 	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
@@ -34,19 +38,35 @@ func ParseCmdLine(str string) *libgrequest.State {
 	} else {
 		s.Threads = 10
 	}
-	//fmt.Printf("%+v", s)
+	fmt.Printf("%+v", s)
 	libgrequest.Validate(s, str, proxy)
 	return s
 }
 
 func main() {
 	argstr := os.Args
+	astr := strings.Join(argstr, " ")
+	fmt.Printf("%s", astr)
 	if len(argstr) == 1 {
 		libgrequest.PrintHelp()
 		return
 	}
+	if libgrequest.ArgBool(astr, "-h") || libgrequest.ArgBool(strings.Join(argstr, " "), "--help") {
+		libgrequest.PrintHelp()
+		return
+	}
+	if libgrequest.ArgBool(strings.Join(argstr, " "), "--version") {
+		fmt.Printf("%s","\n\ngrequest version 0.01\n")
+		return
+	}
+	//url
+	//if libgrequest.ArgString(astr, ".htt(p|ps).+")
+	//fuzz
+	
+	//list
 	sp := ParseCmdLine(strings.Join(argstr, " "))
-	//fmt.Printf("%+v", sp)
-	libgrequest.PrintTop(sp)
-	libgrequest.FuzzProc2(sp)
+	fmt.Printf("%+v", sp)
+
+	//libgrequest.PrintTop(sp)
+	//libgrequest.FuzzProc2(sp)
 }

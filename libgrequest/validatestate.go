@@ -12,7 +12,7 @@ import (
 // Validate :
 func Validate(s *State, argstr, proxy string) {
 	// var proxy string
-	c := SafeCounter{v: make(map[string]int)}
+	// c := SafeCache{v: make(map[string]int)}
 	f := regexp.MustCompile("--(hc|sc|hl|sl|hw|sw|hh|sh).[0-9a-zA-Z(,|)]*")
 	filterstring := f.FindString(argstr)
 	if len(filterstring) > 0 {

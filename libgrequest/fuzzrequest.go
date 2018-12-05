@@ -87,7 +87,6 @@ func MakeRequest(s *State, fullUrl, cookie string) (*int, *Result) {
 // GoGet :
 func GoGet(s *State, url, cookie string) (*int, *Result) {
 	//fmt.Println(url)
-	_, found := c.Set(url)
 	return MakeRequest(s, url, cookie)
 }
 
