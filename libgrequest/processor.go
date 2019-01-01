@@ -2,46 +2,25 @@ package libgrequest
 
 import (
 	//"fmt"
-	"sync"
 )
 
-//func PrintDirResult(){}
+// Processor : 
+func Processor(s *State) {
+	schan := make(chan string)
+	rchan := make(chan *Result, 2) // :TODO
 
-// FuzzProc : handle multi-threaded url requests created
-func FuzzProc(s *State) {
-	PrepareSignalHandler(s)
+	go func() { GetURLrec(s, 0, s.URL, schan) }()
 
-	urlChan := make(chan string)
-	resultChan := make(chan Result)
-	go func() {
-		CallScanWordlist(s.Wordlists[:], s.FuzzMap, s.BaseMap, s.URLFuzz, urlChan, s.Terminate)
-		close(urlChan)
-	}()
-	//s.Printer = PrintResult
-	processorGroup := new(sync.WaitGroup)
-	processorGroup.Add(s.Threads)
-	printerGroup := new(sync.WaitGroup)
-	printerGroup.Add(1)
-	for i := 0; i < s.Threads; i++ {
+	for i := 0; i < 8; i++ {
 		go func() {
-			for u := range urlChan {
-				if s.Terminate {
-					break
-				}
-				s.Processor(s, u, resultChan)
+			resp, res := GoGet(s, <-schan, s.Cookies)
+			if resp != nil {
+				rchan <- res
 			}
-			processorGroup.Done()
 		}()
 	}
-	// reads from resultChan
-	go func() {
-		for r := range resultChan {
-			//fmt.Printf("%+v", &r)
-			s.Printer(s, &r)
-		}
-		printerGroup.Done()
-	}()
-	processorGroup.Wait()
-	close(resultChan)
-	printerGroup.Wait()
+	
+	for r := 0; r < 8; r++ {
+		PrintFn(s, <-rchan)
+	}
 }

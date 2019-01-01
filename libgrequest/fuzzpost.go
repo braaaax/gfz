@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-
-
 // MakePostRequest :
 func MakePostRequest(s *State, u, p string) (*int, *Result) {
 	req, err := http.NewRequest("POST", u, strings.NewReader(p))
@@ -35,7 +33,7 @@ func MakePostRequest(s *State, u, p string) (*int, *Result) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	var r = &Result{Url: u, Body: body}
+	var r = &Result{URL: u, Body: body}
 	return &resp.StatusCode, r
 }
 

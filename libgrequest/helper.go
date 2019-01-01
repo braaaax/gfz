@@ -1,16 +1,24 @@
 package libgrequest
 
 import (
-	"net/http"
 	"fmt"
 	"os"
 	"os/signal"
 	"regexp"
 	"strconv"
 	"strings"
-	"io/ioutil"
-	"unicode/utf8"
+	"text/tabwriter"
+
+	//"github.com/fatih/color"
 )
+
+// helper functions
+
+func check(e error) {
+	if e != nil {
+		panic("failed")
+	}
+}
 
 // IntSet :
 type IntSet struct {
@@ -48,29 +56,7 @@ func (set *StringSet) Add(s string) bool {
 	return !found
 }
 
-// PackFilter :
-func PackFilter(s *State, filternum string) {
-	for _, c := range strings.Split(filternum, ",") {
-		i, err := strconv.Atoi(c)
-		i64 := int64(i)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			s.Filter.Add(i64)
-		}
-	}
-}
-
-// BaseFuzzMap : map 'FUZZ' to "" to help replace function
-func BaseFuzzMap(s *State) { //map[string]string {
-	m := make(map[string]string)
-	for _, val := range s.FuzzMap {
-		m[val] = ""
-	}
-	s.BaseMap = m
-}
-
-// IsMapFull : checks whether there is a value for every key in map
+// IsMapFull : 
 func IsMapFull(fm map[string]string) bool {
 	/* check whether there are keys without values */
 	var r bool
@@ -128,113 +114,12 @@ func ArgArray(s, p string) []string {
 	return match
 }
 
-// FuzzPrintChars :
-func FuzzPrintChars(s *State, r *Result) {
-	if s.Filter.Contains(r.Chars) == s.ShowHide {
-		PrintFn(s, r)
-	}
-}
-
-// FuzzPrintWords :
-func FuzzPrintWords(s *State, r *Result) {
-	if s.Filter.Contains(r.Words) == s.ShowHide {
-		PrintFn(s, r)
-	}
-}
-
-// FuzzPrintStatus :
-func FuzzPrintStatus(s *State, r *Result) {
-	if s.Filter.Contains(r.Code) == s.ShowHide {
-		PrintFn(s, r)
-	}
-}
-
-// FuzzPrintLines :
-func FuzzPrintLines(s *State, r *Result) {
-	if s.Filter.Contains(r.Lines) == s.ShowHide {
-		PrintFn(s, r)
-	}
-}
-
-// PrintFilter : switch for print filter
-func PrintFilter(s *State, fs string) {
-	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
-	if string(m[0]) == "s" {
-		s.ShowHide = true
-	} else {
-		s.ShowHide = false
-	}
-	switch m[1:] {
-	case "c":
-		s.Printer = FuzzPrintStatus
-	case "l":
-		s.Printer = FuzzPrintLines
-	case "w":
-		s.Printer = FuzzPrintWords
-	case "h":
-		s.Printer = FuzzPrintChars
-	}
-}
-
-// FuzzMapper : set Fuzzy.UrlFuzz Fuzzy.Wordlists Fuzzy.FuzzMap
-func FuzzMapper(str string, s *State) {
-	var patZ = "-z.(file|list),[/a-zA-A0-9.-]*"
-	var patW = "-w.[/0-9a-zA-Z._-]*"
-	var patFuzz = "FUZ(Z|[0-9]Z)"
-	var patURL = "htt(p|ps)://(.)*"
-	var wordlists []string
-
-	zRE := regexp.MustCompile(patZ)
-	wRE := regexp.MustCompile(patW)
-	fuzzRE := regexp.MustCompile(patFuzz)
-	urlRE := regexp.MustCompile(patURL)
-
-	if zRE.MatchString(str) {
-		zlist := ArgArray(str, patZ)
-		for i := 0; i < len(zlist); i++ {
-			wordlists = append(wordlists, zlist[i][len("-z file,"):])
-		}
-	}
-	if wRE.MatchString(str) {
-		wlist := ArgArray(str, patW)
-		for i := 0; i < len(wlist); i++ {
-			wordlists = append(wordlists, wlist[i][len("-w "):])
-		}
-	}
-
-	URLs := urlRE.FindAllString(str, -1)
-	FUZZs := fuzzRE.FindAllString(URLs[0], -1)
-
-	fm := make(map[string]string)
-	for index, m := range FUZZs {
-		fm[wordlists[index]] = m
-	}
-	s.URLFuzz = URLs[0]
-	s.Wordlists = wordlists
-	s.FuzzMap = fm
-	BaseFuzzMap(s)
-}
-
-// comment
-func ProcessResults(r *Result, resp *http.Response) {
-	//set body
-	body, err := ioutil.ReadAll(resp.Body)
-	r.Body = body
-	sbody := string(body)
-	if err == nil {
-		r.Chars = int64(utf8.RuneCountInString(sbody))
-		r.Words = int64(len(strings.Fields(sbody)))
-		newlineRE := regexp.MustCompile("\n")
-		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
-	}
-}
-
 // PrepareSignalHandler : Signal handler straight from gobuster to catch CTRL+C
 func PrepareSignalHandler(s *State) {
 	s.SignalChan = make(chan os.Signal, 1)
 	signal.Notify(s.SignalChan, os.Interrupt)
 	go func() {
-		for range s.SignalChan { // for _ := range
+		for range s.SignalChan { 
 			// caught CTRL+C
 			if !s.Quiet {
 				fmt.Println("[!] Keyboard interrupt detected, terminating.")
@@ -244,10 +129,16 @@ func PrepareSignalHandler(s *State) {
 	}()
 }
 
+func inttostring(i int) string {
+	t := strconv.Itoa(i)
+	return t
+}
+
 // PrintTop : beginning of output
 func PrintTop(s *State) {
-	fmt.Println("Target: ", s.URLFuzz)
-	fmt.Println("Wordlists: ", strings.Join(s.Wordlists, ", "))
+	//w := tabwriter.NewWriter(os.Stdout,0, 0, 1, ' ', tabwriter.AlignRight)
+	fmt.Println("Target: ", s.URL)
+	fmt.Println("Wordlists: ", strings.Join(s.WordListFiles, ", "))
 	fmt.Println("=============================================================================================================")
 	fmt.Println("URL                                                 Status        Chars          Words          Lines")
 	fmt.Println("=============================================================================================================")
@@ -260,7 +151,6 @@ func PrintHelp() {
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help")
 	fmt.Println("--version                     : grequest version details")
-	fmt.Println("-p addr                       : COMING SOON -- Use Proxy in format http//ip:port")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default)")
 	fmt.Println("--follow                      : Follow HTTP redirections")
 	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
