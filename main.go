@@ -1,8 +1,6 @@
 package main
 
 import (
-	//"fmt"
-	"fmt"
 	"os"
 	"strings"
 
@@ -34,7 +32,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	if threads > 0 {
 		s.Threads = threads
 	} else {
-		s.Threads = 10
+		s.Threads = 1
 	}
 
 	libgrequest.Validate(s, str, proxy)
@@ -46,8 +44,7 @@ func main() {
 
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
-	fmt.Printf("%+v\n\n\n", s)
-	libgrequest.Processor(s)
-	
+	libgrequest.ProcessorII(s)
+
 	return
 }

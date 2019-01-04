@@ -7,9 +7,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 
-	//"github.com/fatih/color"
+	"github.com/fatih/color"
 )
 
 // helper functions
@@ -56,7 +55,7 @@ func (set *StringSet) Add(s string) bool {
 	return !found
 }
 
-// IsMapFull : 
+// IsMapFull :
 func IsMapFull(fm map[string]string) bool {
 	/* check whether there are keys without values */
 	var r bool
@@ -119,7 +118,7 @@ func PrepareSignalHandler(s *State) {
 	s.SignalChan = make(chan os.Signal, 1)
 	signal.Notify(s.SignalChan, os.Interrupt)
 	go func() {
-		for range s.SignalChan { 
+		for range s.SignalChan {
 			// caught CTRL+C
 			if !s.Quiet {
 				fmt.Println("[!] Keyboard interrupt detected, terminating.")
@@ -134,14 +133,32 @@ func inttostring(i int) string {
 	return t
 }
 
+func iterations(maxes []int) int {
+	c := 1
+	for i := range maxes {
+		c = maxes[i] * c
+	}
+	return c
+}
+
 // PrintTop : beginning of output
 func PrintTop(s *State) {
-	//w := tabwriter.NewWriter(os.Stdout,0, 0, 1, ' ', tabwriter.AlignRight)
-	fmt.Println("Target: ", s.URL)
-	fmt.Println("Wordlists: ", strings.Join(s.WordListFiles, ", "))
-	fmt.Println("=============================================================================================================")
-	fmt.Println("URL                                                 Status        Chars          Words          Lines")
-	fmt.Println("=============================================================================================================")
+	ye := color.New(color.FgYellow).SprintFunc()
+	wordlists := strings.Join(s.WordListFiles, ", ") // color.New(color.FgHiWhite).SprintFunc()
+	fmt.Println("\n[+] Target: ", ye(s.URL))
+	fmt.Println("[+] Wordlists: ", ye(wordlists))
+	fmt.Printf("\n")
+	fmt.Printf("%-20s %-10s %-9s %-8s %-8s\n", "URL", "STATUS", "CHARS", "WORDS", "LINES")
+	// w := tabwriter.NewWriter(os.Stdout, 20, 0, 0, ' ', tabwriter.Debug)
+	// fmt.Fprintln(w, "URL\tStatus\tChars\tWords\tLines")
+	// fmt.Println("==============================================================================================")
+	// w.Flush()
+}
+
+func PrintT(s *State) {
+	output := ""
+	//output += fmt.Sprintf(" Status=%-8s", code)
+	output += fmt.Sprintf("[+] %s", s.URL)
 }
 
 // PrintHelp :

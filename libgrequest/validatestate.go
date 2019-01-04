@@ -118,14 +118,14 @@ func Validate(s *State, argstr, proxy string) {
 		PrintTop(s)
 		Code, _ := GoGet(s, s.URL, s.Cookies)
 		if Code == nil {
-			fmt.Printf("failed %s", s.URL)
+			fmt.Printf("Cannot reach %s", s.URL)
 			return
 		}
-		fmt.Printf("connect: OK\n")
+		//fmt.Printf("connect: OK\n")
 		s.Fuzzer.Wordlists = s.Fuzzer.SetWordlist()
-		fmt.Println("s.Fuzzer.Wordlists: ", s.Fuzzer.Wordlists)
-		fmt.Println("s.Fuzzer.Indexes:", s.Fuzzer.Indexes)
-		fmt.Println("s.Fuzzer.Maxes:", s.Fuzzer.Maxes)
+		// fmt.Println("s.Fuzzer.Wordlists: ", s.Fuzzer.Wordlists)
+		// fmt.Println("s.Fuzzer.Indexes:", s.Fuzzer.Indexes)
+		// fmt.Println("s.Fuzzer.Maxes:", s.Fuzzer.Maxes)
 
 	} else {
 		PrintHelp()

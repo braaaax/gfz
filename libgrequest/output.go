@@ -4,13 +4,20 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"os"
 	"regexp"
-	"strings"
-	"unicode/utf8"
 	"strconv"
+	"strings"
+	"text/tabwriter"
+	"unicode/utf8"
 
 	"github.com/fatih/color"
 )
+
+type OutputS struct {
+	OutputLines []string
+}
 
 // FuzzPrintChars :
 func FuzzPrintChars(s *State, r *Result) {
@@ -85,12 +92,16 @@ func WriteToFile(output string, s *State) {
 // PrintFn :
 func PrintFn(s *State, r *Result) {
 	output := ""
-	output += fmt.Sprintf("url: %-50s", r.URL) // to do: just the uri
+	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
 	if !s.NoStatus {
 		code := strconv.FormatInt(r.Code, 10)
-		if code == "200" {color.Green(code)}
-		if code == "403" {color.Red(code)}
-		output += fmt.Sprintf(" (Status: %-4s)", code)
+		if code == "200" {
+			color.Green(code)
+		}
+		if code == "403" {
+			color.Red(code)
+		}
+		output += fmt.Sprintf(" Status: %-8s", code)
 	}
 	if r.Chars >= int64(0) {
 		output += fmt.Sprintf(" Chars=%-8d", r.Chars)
@@ -102,4 +113,64 @@ func PrintFn(s *State, r *Result) {
 		WriteToFile(output, s)
 	}
 	fmt.Printf(output)
+}
+
+func parseurl(arg string) string {
+	u, err := url.Parse(arg)
+	if err != nil {
+		panic(err)
+	}
+	return u.Path
+}
+
+func resulttostring(arg int64) string {
+	return strconv.FormatInt(arg, 10)
+}
+
+func colorize(s *State, r *Result) {
+	// blue := color.New(color.FgBlue).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+	green := color.New(color.FgGreen).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
+	code := resulttostring(r.Code)
+	output := ""
+
+	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
+	if !s.NoStatus {
+		if strings.HasPrefix(code, "2") {
+			code = green(code)
+		}
+		if strings.HasPrefix(code, "3") {
+			code = yellow(code)
+		}
+		if strings.HasPrefix(code, "4") {
+			code = red(code)
+		}
+		output += fmt.Sprintf(" Status=%-8s", code)
+	}
+	if r.Chars >= int64(0) {
+		output += fmt.Sprintf(" Chars=%-8s", yellow(r.Chars))
+		output += fmt.Sprintf(" Words=%-8s", yellow(r.Words))
+		output += fmt.Sprintf(" Lines=%-8s", yellow(r.Lines))
+	}
+	output += "\n"
+	if s.OutputFile != nil {
+		WriteToFile(output, s)
+	}
+	fmt.Printf(output)
+
+}
+
+func printout(r *Result) {
+	rurl := parseurl(r.URL)
+	rcode := strconv.FormatInt(r.Code, 10)
+	rchars := strconv.FormatInt(r.Chars, 10)
+	rwords := strconv.FormatInt(r.Words, 10)
+	rlines := strconv.FormatInt(r.Lines, 10)
+
+	output := fmt.Sprintf("%s\tstatus=%s\tchars=%s\twords=%s\tlines=%s", rurl, rcode, rchars, rwords, rlines)
+
+	w := tabwriter.NewWriter(os.Stdout, 20, 0, 0, ' ', tabwriter.Debug)
+	fmt.Fprintln(w, output)
+	w.Flush()
 }
