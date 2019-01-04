@@ -149,16 +149,6 @@ func PrintTop(s *State) {
 	fmt.Println("[+] Wordlists: ", ye(wordlists))
 	fmt.Printf("\n")
 	fmt.Printf("%-20s %-10s %-9s %-8s %-8s\n", "URL", "STATUS", "CHARS", "WORDS", "LINES")
-	// w := tabwriter.NewWriter(os.Stdout, 20, 0, 0, ' ', tabwriter.Debug)
-	// fmt.Fprintln(w, "URL\tStatus\tChars\tWords\tLines")
-	// fmt.Println("==============================================================================================")
-	// w.Flush()
-}
-
-func PrintT(s *State) {
-	output := ""
-	//output += fmt.Sprintf(" Status=%-8s", code)
-	output += fmt.Sprintf("[+] %s", s.URL)
 }
 
 // PrintHelp :
@@ -175,5 +165,5 @@ func PrintHelp() {
 	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code/lines/words/chars")
 	fmt.Printf("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code/lines/words/chars\n")
 	fmt.Println("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords wfuzz will replace them with the values of the specified payload.")
-	fmt.Println("Example: - grequest -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
+	fmt.Println("Example: grequest -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 }

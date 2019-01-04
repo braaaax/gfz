@@ -5,11 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 	"unicode/utf8"
 
 	"github.com/fatih/color"
@@ -17,6 +15,18 @@ import (
 
 type OutputS struct {
 	OutputLines []string
+}
+
+func parseurl(arg string) string {
+	u, err := url.Parse(arg)
+	if err != nil {
+		panic(err)
+	}
+	return u.Path
+}
+
+func resulttostring(arg int64) string {
+	return strconv.FormatInt(arg, 10)
 }
 
 // FuzzPrintChars :
@@ -115,19 +125,7 @@ func PrintFn(s *State, r *Result) {
 	fmt.Printf(output)
 }
 
-func parseurl(arg string) string {
-	u, err := url.Parse(arg)
-	if err != nil {
-		panic(err)
-	}
-	return u.Path
-}
-
-func resulttostring(arg int64) string {
-	return strconv.FormatInt(arg, 10)
-}
-
-func colorize(s *State, r *Result) {
+func PrintFnColor(s *State, r *Result) {
 	// blue := color.New(color.FgBlue).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
@@ -159,18 +157,4 @@ func colorize(s *State, r *Result) {
 	}
 	fmt.Printf(output)
 
-}
-
-func printout(r *Result) {
-	rurl := parseurl(r.URL)
-	rcode := strconv.FormatInt(r.Code, 10)
-	rchars := strconv.FormatInt(r.Chars, 10)
-	rwords := strconv.FormatInt(r.Words, 10)
-	rlines := strconv.FormatInt(r.Lines, 10)
-
-	output := fmt.Sprintf("%s\tstatus=%s\tchars=%s\twords=%s\tlines=%s", rurl, rcode, rchars, rwords, rlines)
-
-	w := tabwriter.NewWriter(os.Stdout, 20, 0, 0, ' ', tabwriter.Debug)
-	fmt.Fprintln(w, output)
-	w.Flush()
 }

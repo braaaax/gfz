@@ -10,7 +10,7 @@ import (
 // ParseCmdLine : eval cmdline arguments
 func ParseCmdLine(str string) *libgrequest.State {
 	s := libgrequest.InitState()
-	s.Cache = libgrequest.InitSafeCache()
+	// s.Cache = libgrequest.InitSafeCache()
 	s.Fuzzer = libgrequest.InitFuzz()
 	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
 	s.Mode = libgrequest.ArgString(str, "-m")
@@ -24,11 +24,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Recursive = libgrequest.ArgBool(str, "-r")
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
 
-	s.NoStatus = false
-	s.IncludeLength = true
-	s.WildcardForced = false
-	s.UseSlash = true
-
 	if threads > 0 {
 		s.Threads = threads
 	} else {
@@ -41,10 +36,9 @@ func ParseCmdLine(str string) *libgrequest.State {
 
 func main() {
 	// TESTING
-
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
-	libgrequest.ProcessorII(s)
+	libgrequest.Processor(s)
 
 	return
 }

@@ -49,18 +49,58 @@ type State struct {
 	Recursive      bool
 	Terminate      bool
 	Threads        int
-	Cache          *SafeCache
+	// Cache          *SafeCache
 	Fuzzer         *Fuzz
 }
 
 // InitState :
 func InitState() *State {
 	return &State{
-		StatusCodes: IntSet{Set: map[int64]bool{}},
-		WildcardIps: StringSet{Set: map[string]bool{}},
-		Filter:      IntSet{Set: map[int64]bool{}},
-		IsWildcard:  false,
+		StatusCodes:    IntSet{Set: map[int64]bool{}},
+		WildcardIps:    StringSet{Set: map[string]bool{}},
+		Filter:         IntSet{Set: map[int64]bool{}},
+		NoStatus:       false,
+		IsWildcard:     false,
+		IncludeLength:  false,
+		WildcardForced: false,
+		UseSlash:       false,
 	}
+}
+
+type Fuzz struct {
+	Wordlists [][]string
+	Indexes   []int
+	Maxes     []int
+	Fuzzmap   map[string]string
+}
+
+func InitFuzz() *Fuzz {
+	return &Fuzz{}
+}
+
+func (f *Fuzz) SetWordlist() [][]string {
+	wordlists := [][]string{}
+	var scanner *bufio.Scanner
+	for fn := range f.Fuzzmap {
+		wordlist, err := os.Open(fn)
+		check(err)
+		defer wordlist.Close()
+		scanner = bufio.NewScanner(wordlist)
+		scanner.Split(bufio.ScanWords)
+		var words []string
+		for scanner.Scan() {
+			words = append(words, scanner.Text())
+
+		}
+		wordlists = append(wordlists, words)
+	}
+	// setting up for rloop
+	f.Indexes = append(f.Indexes, len(wordlists))
+	f.Indexes = append(f.Indexes, 0)
+	for _, i := range wordlists {
+		f.Maxes = append(f.Maxes, len(i))
+	}
+	return wordlists
 }
 
 // Result :
@@ -107,40 +147,4 @@ func (c *SafeCache) Get() string {
 
 func InitSafeCache() *SafeCache {
 	return &SafeCache{v: []string{}, mux: sync.Mutex{}}
-}
-
-type Fuzz struct {
-	Wordlists [][]string
-	Indexes   []int
-	Maxes     []int
-	Fuzzmap   map[string]string
-}
-
-func InitFuzz() *Fuzz {
-	return &Fuzz{}
-}
-
-func (f *Fuzz) SetWordlist() [][]string {
-	wordlists := [][]string{}
-	var scanner *bufio.Scanner
-	for fn := range f.Fuzzmap {
-		wordlist, err := os.Open(fn)
-		check(err)
-		defer wordlist.Close()
-		scanner = bufio.NewScanner(wordlist)
-		scanner.Split(bufio.ScanWords)
-		var words []string
-		for scanner.Scan() {
-			words = append(words, scanner.Text())
-
-		}
-		wordlists = append(wordlists, words)
-	}
-	// setting up for rloop
-	f.Indexes = append(f.Indexes, len(wordlists))
-	f.Indexes = append(f.Indexes, 0)
-	for _, i := range wordlists {
-		f.Maxes = append(f.Maxes, len(i))
-	}
-	return wordlists
 }

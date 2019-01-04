@@ -61,7 +61,6 @@ func SetFuzzmap(str string, s *State) {
 		}
 		s.WordListFiles = fname
 		s.Fuzzer.Fuzzmap = fm
-		//s.FuzzMap = fm
 
 	}
 }
@@ -121,12 +120,7 @@ func Validate(s *State, argstr, proxy string) {
 			fmt.Printf("Cannot reach %s", s.URL)
 			return
 		}
-		//fmt.Printf("connect: OK\n")
 		s.Fuzzer.Wordlists = s.Fuzzer.SetWordlist()
-		// fmt.Println("s.Fuzzer.Wordlists: ", s.Fuzzer.Wordlists)
-		// fmt.Println("s.Fuzzer.Indexes:", s.Fuzzer.Indexes)
-		// fmt.Println("s.Fuzzer.Maxes:", s.Fuzzer.Maxes)
-
 	} else {
 		PrintHelp()
 		return
