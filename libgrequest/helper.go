@@ -15,7 +15,7 @@ import (
 
 func check(e error) {
 	if e != nil {
-		panic("failed")
+		panic("file not found!")
 	}
 }
 

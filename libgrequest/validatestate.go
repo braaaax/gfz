@@ -113,16 +113,9 @@ func Validate(s *State, argstr, proxy string) {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-	if len(s.URL) != 0 && IsMapFull(s.Fuzzer.Fuzzmap) {
-		PrintTop(s)
-		Code, _ := GoGet(s, s.URL, s.Cookies)
-		if Code == nil {
-			fmt.Printf("Cannot reach %s", s.URL)
-			return
-		}
-		s.Fuzzer.Wordlists = s.Fuzzer.SetWordlist()
-	} else {
-		PrintHelp()
+	Code, _ := GoGet(s, s.URL, s.Cookies)
+	if Code == nil {
+		fmt.Printf("Cannot reach %s", s.URL)
 		return
 	}
 }

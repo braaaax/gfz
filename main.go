@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -38,7 +39,18 @@ func main() {
 	// TESTING
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
+	if len(s.URL) != 0 && libgrequest.IsMapFull(s.Fuzzer.Fuzzmap) {
+		libgrequest.PrintTop(s)
+		Code, _ := libgrequest.GoGet(s, s.URL, s.Cookies)
+		if Code == nil {
+			fmt.Printf("Cannot reach %s", s.URL)
+			return
+		}
+		s.Fuzzer.Wordlists = s.Fuzzer.SetWordlist()
+	} else {
+		libgrequest.PrintHelp()
+		return
+	}
 	libgrequest.Processor(s)
-
 	return
 }
