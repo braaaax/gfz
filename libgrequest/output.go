@@ -13,10 +13,6 @@ import (
 	"github.com/fatih/color"
 )
 
-type OutputS struct {
-	OutputLines []string
-}
-
 func parseurl(arg string) string {
 	u, err := url.Parse(arg)
 	if err != nil {

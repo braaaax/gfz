@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-//var curloop = 0
-
 func freplace(u, w string) string {
 	re := regexp.MustCompile("FUZ(Z|[0-9]Z)")
 	match := re.FindString(u)

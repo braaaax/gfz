@@ -22,3 +22,5 @@ func Processor(s *State) {
 		s.Printer(s, <-rchan)
 	}
 }
+
+//TODO: add recursion

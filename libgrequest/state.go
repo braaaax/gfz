@@ -2,7 +2,6 @@ package libgrequest
 
 import (
 	"bufio"
-	//"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -79,6 +78,7 @@ func InitFuzz() *Fuzz {
 	return &Fuzz{}
 }
 
+/*
 func (f *Fuzz) SetWordlist() [][]string {
 	wordlists := [][]string{}
 	var scanner *bufio.Scanner
@@ -104,6 +104,7 @@ func (f *Fuzz) SetWordlist() [][]string {
 
 	return wordlists
 }
+*/
 
 func (s *State) SWordlists() [][]string {
 	wordlists := [][]string{}
@@ -138,6 +139,7 @@ type Result struct {
 	Code  int64
 }
 
+// will impliment a counter later
 // SafeCache is safe to use concurrently.
 type SafeCache struct {
 	v   []string
