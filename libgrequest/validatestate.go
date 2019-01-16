@@ -81,6 +81,7 @@ func Validate(s *State, argstr, proxy string) {
 		// default
 		PrintFilter(s, "sc")
 		SetFilter(s, "200,301,302,403")
+
 	}
 	switch strings.ToLower(s.Mode) {
 	case "POST":

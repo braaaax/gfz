@@ -1,6 +1,6 @@
 package libgrequest
 
-// Processor : 
+// Processor :
 func Processor(s *State) {
 	schan := make(chan string)
 	rchan := make(chan *Result, s.Threads) // :TODO err chan
@@ -19,6 +19,6 @@ func Processor(s *State) {
 	}
 
 	for r := 0; r < iterations(s.Fuzzer.Maxes); r++ {
-		PrintFnColor(s, <-rchan)
+		s.Printer(s, <-rchan)
 	}
 }

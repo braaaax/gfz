@@ -99,6 +99,7 @@ func WriteToFile(output string, s *State) {
 	}
 }
 
+/*
 // PrintFn :
 func PrintFn(s *State, r *Result) {
 	output := ""
@@ -124,8 +125,9 @@ func PrintFn(s *State, r *Result) {
 	}
 	fmt.Printf(output)
 }
+*/
 
-func PrintFnColor(s *State, r *Result) {
+func PrintFn(s *State, r *Result) {
 	// blue := color.New(color.FgBlue).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()

@@ -2,6 +2,7 @@ package libgrequest
 
 import (
 	"bufio"
+	//"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -49,7 +50,7 @@ type State struct {
 	Recursive      bool
 	Terminate      bool
 	Threads        int
-	// Cache          *SafeCache
+	FUZZs          []string
 	Fuzzer         *Fuzz
 }
 
@@ -99,6 +100,30 @@ func (f *Fuzz) SetWordlist() [][]string {
 	f.Indexes = append(f.Indexes, 0)
 	for _, i := range wordlists {
 		f.Maxes = append(f.Maxes, len(i))
+	}
+
+	return wordlists
+}
+
+func (s *State) SWordlists() [][]string {
+	wordlists := [][]string{}
+	for _, filename := range s.WordListFiles {
+		fn, err := os.Open(filename)
+		check(err)
+		defer fn.Close()
+		var lines []string
+		scanner := bufio.NewScanner(fn)
+		for scanner.Scan() {
+			lines = append(lines, scanner.Text())
+		}
+		wordlists = append(wordlists, lines)
+
+	}
+	// setting up for rloop
+	s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, len(wordlists))
+	s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+	for _, i := range wordlists {
+		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
 	return wordlists
 }
