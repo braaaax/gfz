@@ -1,12 +1,6 @@
-Aim to reproduce wfuzz's functionality and versatility and combine it with go's speed
+Aims to reproduce wfuzz's functionality and versatility and combine it with go's concurrency. Based on gobuster, written by OJ (theColonial)
 
-`grequest --follow -t 32 --sc 200,403 -w wordlist1 -w wordlist2 http://someip/FUZZFUZ2Z`
+most basic usage:
 
-installation:
-
-go get && go build
-go install
-
-or just use the latest binary in `/release`
-
+`gofuzz -w wordlist1 -w wordlist2 http://someip/FUZZFUZ2Z`
 
