@@ -25,7 +25,7 @@ func resulttostring(arg int64) string {
 	return strconv.FormatInt(arg, 10)
 }
 
-// FuzzPrintChars : 
+// FuzzPrintChars :
 // probably a better way to do this
 func FuzzPrintChars(s *State, r *Result) {
 	if s.Filter.Contains(r.Chars) == s.Show {
@@ -54,7 +54,7 @@ func FuzzPrintLines(s *State, r *Result) {
 	}
 }
 
-// PrintFilter : 
+// PrintFilter :
 func PrintFilter(s *State, fs string) {
 	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
 	if string(m[0]) == "s" {
@@ -161,6 +161,8 @@ func PrintFn(s *State, r *Result) {
 	}
 	re := regexp.MustCompile("FUZ(Z|[0-9]Z)")
 	match := re.FindString(output)
-	if len(match) == 0 {fmt.Printf(output)}
+	if len(match) == 0 {
+		fmt.Printf(output)
+	}
 
 }
