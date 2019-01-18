@@ -27,29 +27,38 @@ func resulttostring(arg int64) string {
 
 // FuzzPrintChars :
 func FuzzPrintChars(s *State, r *Result) {
-	if s.Filter.Contains(r.Chars) == s.Show {
-		PrintFn(s, r)
+	if r != nil {
+		if s.Filter.Contains(r.Chars) == s.Show {
+			PrintFn(s, r)
+		}
 	}
 }
 
 // FuzzPrintWords :
 func FuzzPrintWords(s *State, r *Result) {
-	if s.Filter.Contains(r.Words) == s.Show {
-		PrintFn(s, r)
+	if r != nil {
+		if s.Filter.Contains(r.Words) == s.Show {
+			PrintFn(s, r)
+		}
 	}
 }
 
 // FuzzPrintStatus :
 func FuzzPrintStatus(s *State, r *Result) {
-	if s.Filter.Contains(r.Code) == s.Show {
-		PrintFn(s, r)
+	if r != nil {
+		if s.Filter.Contains(r.Code) == s.Show { // issue nil
+			PrintFn(s, r)
+		}
 	}
+
 }
 
 // FuzzPrintLines :
 func FuzzPrintLines(s *State, r *Result) {
-	if s.Filter.Contains(r.Lines) == s.Show {
-		PrintFn(s, r)
+	if r != nil {
+		if s.Filter.Contains(r.Lines) == s.Show {
+			PrintFn(s, r)
+		}
 	}
 }
 
@@ -74,8 +83,9 @@ func PrintFilter(s *State, fs string) {
 }
 
 // ProcessResults :
-func ProcessResults(r *Result, resp *http.Response) {
+func ProcessResults(fullUrl string, resp *http.Response) *Result {
 	//set body
+	var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
 	body, err := ioutil.ReadAll(resp.Body)
 	r.Body = body
 	sbody := string(body)
@@ -85,6 +95,7 @@ func ProcessResults(r *Result, resp *http.Response) {
 		newlineRE := regexp.MustCompile("\n")
 		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
 	}
+	return r
 }
 
 // WriteToFile :

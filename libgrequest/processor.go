@@ -11,6 +11,7 @@ func Processor(s *State) {
 		go func() {
 			for {
 				resp, res := GoGet(s, <-schan, s.Cookies)
+				
 				if resp != nil {
 					rchan <- res
 				}
@@ -19,7 +20,7 @@ func Processor(s *State) {
 	}
 
 	for r := 0; r < iterations(s.Fuzzer.Maxes); r++ {
-		s.Printer(s, <-rchan)
+		<-rchan
 	}
 }
 

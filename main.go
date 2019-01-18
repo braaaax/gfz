@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/braaaax/grequest/libgrequest"
+	"github.com/braaaax/gofuzz/libgrequest"
 )
 
 // ParseCmdLine : eval cmdline arguments
@@ -47,7 +47,11 @@ func main() {
 			return
 		}
 		s.Fuzzer.Wordlists = s.SWordlists()
-		
+		if len(s.WordListFiles) != len(s.Fuzzer.Fuzzmap) {
+			libgrequest.PrintHelp()
+			return
+		}
+
 	} else {
 		libgrequest.PrintHelp()
 		return

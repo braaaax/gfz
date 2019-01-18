@@ -121,8 +121,12 @@ func (s *State) SWordlists() [][]string {
 
 	}
 	// setting up for rloop
-	s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, len(wordlists))
-	s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+	if len(wordlists) == 1 {
+		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+	} else {
+		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, len(wordlists))
+		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+	}
 	for _, i := range wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
