@@ -25,44 +25,36 @@ func resulttostring(arg int64) string {
 	return strconv.FormatInt(arg, 10)
 }
 
-// FuzzPrintChars :
+// FuzzPrintChars : 
+// probably a better way to do this
 func FuzzPrintChars(s *State, r *Result) {
-	if r != nil {
-		if s.Filter.Contains(r.Chars) == s.Show {
-			PrintFn(s, r)
-		}
+	if s.Filter.Contains(r.Chars) == s.Show {
+		PrintFn(s, r)
 	}
 }
 
 // FuzzPrintWords :
 func FuzzPrintWords(s *State, r *Result) {
-	if r != nil {
-		if s.Filter.Contains(r.Words) == s.Show {
-			PrintFn(s, r)
-		}
+	if s.Filter.Contains(r.Words) == s.Show {
+		PrintFn(s, r)
 	}
 }
 
 // FuzzPrintStatus :
 func FuzzPrintStatus(s *State, r *Result) {
-	if r != nil {
-		if s.Filter.Contains(r.Code) == s.Show { // issue nil
-			PrintFn(s, r)
-		}
+	if s.Filter.Contains(r.Code) == s.Show { // issue nil
+		PrintFn(s, r)
 	}
-
 }
 
 // FuzzPrintLines :
 func FuzzPrintLines(s *State, r *Result) {
-	if r != nil {
-		if s.Filter.Contains(r.Lines) == s.Show {
-			PrintFn(s, r)
-		}
+	if s.Filter.Contains(r.Lines) == s.Show {
+		PrintFn(s, r)
 	}
 }
 
-// PrintFilter : switch for print filter
+// PrintFilter : 
 func PrintFilter(s *State, fs string) {
 	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
 	if string(m[0]) == "s" {
@@ -135,6 +127,9 @@ func PrintFn(s *State, r *Result) {
 */
 
 func PrintFn(s *State, r *Result) {
+	if r == nil {
+		return
+	}
 	// blue := color.New(color.FgBlue).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
@@ -164,6 +159,8 @@ func PrintFn(s *State, r *Result) {
 	if s.OutputFile != nil {
 		WriteToFile(output, s)
 	}
-	fmt.Printf(output)
+	re := regexp.MustCompile("FUZ(Z|[0-9]Z)")
+	match := re.FindString(output)
+	if len(match) == 0 {fmt.Printf(output)}
 
 }

@@ -41,7 +41,6 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 
 // MakeRequest : 
 func MakeRequest(s *State, fullUrl, cookie string) (*int, *Result) {
-	// var r = &Result{URL:fullUrl}
 	req, err := http.NewRequest("GET", fullUrl, nil)
 	if err != nil {
 		return nil, nil

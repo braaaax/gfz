@@ -1,3 +1,4 @@
+/*replicate the basic functionalities of wfuzz in go*/
 package main
 
 import (
@@ -28,7 +29,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	if threads > 0 {
 		s.Threads = threads
 	} else {
-		s.Threads = 1
+		s.Threads = 10
 	}
 
 	libgrequest.Validate(s, str, proxy)
