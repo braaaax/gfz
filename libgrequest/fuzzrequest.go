@@ -39,8 +39,8 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 	return resp, err
 }
 
-// MakeRequest : 
-func MakeRequest(s *State, fullUrl, cookie string) (*int, *Result) {
+// MakeRequest :
+func MakeRequest(s *State, fullUrl, cookie string) (*int, error) {
 	req, err := http.NewRequest("GET", fullUrl, nil)
 	if err != nil {
 		return nil, nil
@@ -68,20 +68,15 @@ func MakeRequest(s *State, fullUrl, cookie string) (*int, *Result) {
 	}
 	defer resp.Body.Close()
 	//var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
-	r := ProcessResults(fullUrl, resp)
-	s.Printer(s, r)
-	return &resp.StatusCode, r
+	r, err := ProcessResponse(fullUrl, resp)
+	if err == nil {
+		s.Printer(s, r)
+	}
+	
+	return &resp.StatusCode, nil
 }
 
 // GoGet : returs address of response statuscode and result struct pointer
-func GoGet(s *State, url, cookie string) (*int, *Result) {
+func GoGet(s *State, url, cookie string) (*int, error) {
 	return MakeRequest(s, url, cookie)
-}
-
-// GetProcessor :
-func GetProcessor(s *State, u string, resultChan chan<- Result) {
-	GetResp, GetResult := GoGet(s, u, s.Cookies)
-	if GetResp != nil {
-		resultChan <- *GetResult
-	}
 }

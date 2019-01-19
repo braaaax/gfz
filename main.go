@@ -47,7 +47,7 @@ func main() {
 			fmt.Printf("Cannot reach %s", s.URL)
 			return
 		}
-		s.Fuzzer.Wordlists = s.SWordlists()
+		s.Fuzzer.Wordlists = s.SetWordlists()
 		if len(s.WordListFiles) != len(s.Fuzzer.Fuzzmap) {
 			libgrequest.PrintHelp()
 			return

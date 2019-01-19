@@ -25,37 +25,37 @@ func resulttostring(arg int64) string {
 	return strconv.FormatInt(arg, 10)
 }
 
-// FuzzPrintChars :
+// PrintChars :
 // probably a better way to do this
-func FuzzPrintChars(s *State, r *Result) {
+func PrintChars(s *State, r *Result) {
 	if s.Filter.Contains(r.Chars) == s.Show {
 		PrintFn(s, r)
 	}
 }
 
-// FuzzPrintWords :
-func FuzzPrintWords(s *State, r *Result) {
+// PrintWords :
+func PrintWords(s *State, r *Result) {
 	if s.Filter.Contains(r.Words) == s.Show {
 		PrintFn(s, r)
 	}
 }
 
-// FuzzPrintStatus :
-func FuzzPrintStatus(s *State, r *Result) {
+// PrintStatus :
+func PrintStatus(s *State, r *Result) {
 	if s.Filter.Contains(r.Code) == s.Show { // issue nil
 		PrintFn(s, r)
 	}
 }
 
-// FuzzPrintLines :
-func FuzzPrintLines(s *State, r *Result) {
+// PrintLines :
+func PrintLines(s *State, r *Result) {
 	if s.Filter.Contains(r.Lines) == s.Show {
 		PrintFn(s, r)
 	}
 }
 
-// PrintFilter :
-func PrintFilter(s *State, fs string) {
+// ParsePrintFilterArgs :
+func ParsePrintFilterArgs(s *State, fs string) {
 	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
 	if string(m[0]) == "s" {
 		s.Show = true
@@ -64,21 +64,24 @@ func PrintFilter(s *State, fs string) {
 	}
 	switch m[1:] {
 	case "c":
-		s.Printer = FuzzPrintStatus
+		s.Printer = PrintStatus
 	case "l":
-		s.Printer = FuzzPrintLines
+		s.Printer = PrintLines
 	case "w":
-		s.Printer = FuzzPrintWords
+		s.Printer = PrintWords
 	case "h":
-		s.Printer = FuzzPrintChars
+		s.Printer = PrintChars
 	}
 }
 
-// ProcessResults :
-func ProcessResults(fullUrl string, resp *http.Response) *Result {
+// ProcessResponse :
+func ProcessResponse(fullUrl string, resp *http.Response) (*Result, error) {
 	//set body
 	var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return r, err
+	}
 	r.Body = body
 	sbody := string(body)
 	if err == nil {
@@ -86,8 +89,10 @@ func ProcessResults(fullUrl string, resp *http.Response) *Result {
 		r.Words = int64(len(strings.Fields(sbody)))
 		newlineRE := regexp.MustCompile("\n")
 		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
+	} else {
+		return r, err
 	}
-	return r
+	return r, nil
 }
 
 // WriteToFile :
@@ -98,9 +103,8 @@ func WriteToFile(output string, s *State) {
 	}
 }
 
-/*
-// PrintFn :
-func PrintFn(s *State, r *Result) {
+// PrintNoColorFn : print page into to stdout
+func PrintNoColorFn(s *State, r *Result) {
 	output := ""
 	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
 	if !s.NoStatus {
@@ -124,8 +128,8 @@ func PrintFn(s *State, r *Result) {
 	}
 	fmt.Printf(output)
 }
-*/
 
+// PrintFn : prints corized page info to stdout
 func PrintFn(s *State, r *Result) {
 	if r == nil {
 		return
@@ -156,7 +160,7 @@ func PrintFn(s *State, r *Result) {
 		output += fmt.Sprintf(" Lines=%-8s", yellow(r.Lines))
 	}
 	output += "\n"
-	
+
 	if s.OutputFile != nil {
 		WriteToFile(output, s)
 	}
@@ -165,6 +169,5 @@ func PrintFn(s *State, r *Result) {
 	if len(match) == 0 {
 		fmt.Printf(output)
 	}
-
 
 }

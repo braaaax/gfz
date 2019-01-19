@@ -128,12 +128,12 @@ func PrepareSignalHandler(s *State) {
 	}()
 }
 
-func inttostring(i int) string {
+func int2string(i int) string {
 	t := strconv.Itoa(i)
 	return t
 }
 
-func iterations(maxes []int) int {
+func Nrequests(maxes []int) int {
 	c := 1
 	for i := range maxes {
 		c = maxes[i] * c

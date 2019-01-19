@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// SetFilter :
-func SetFilter(s *State, filternum string) {
+// ConvertPrintFilter :
+func ConvertPrintFilter(s *State, filternum string) {
 	for _, c := range strings.Split(filternum, ",") {
 		i, err := strconv.Atoi(c)
 		i64 := int64(i)
@@ -23,44 +23,44 @@ func SetFilter(s *State, filternum string) {
 	}
 }
 
-// SetFuzzmap : set UrlFuzz Wordlists FuzzMap
-func SetFuzzmap(str string, s *State) {
+// ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
+func ParseWordlistArgs(str string, s *State) {
 	var patZ = "-z.(file|list),[/a-zA-A0-9.-]*"
 	var patW = "-w.[/0-9a-zA-Z._-]*"
 	var patFuzz = "FUZ(Z|[0-9]Z)"
 	var patURL = "htt(p|ps)://(.)*"
 	var fname []string
 
-	zRE := regexp.MustCompile(patZ)
-	wRE := regexp.MustCompile(patW)
+	wordlistargsz := regexp.MustCompile(patZ)
+	wordlistargsw := regexp.MustCompile(patW)
 	fuzzRE := regexp.MustCompile(patFuzz)
 	urlRE := regexp.MustCompile(patURL)
 
 	//Parse filename arguments
-	if zRE.MatchString(str) {
+	if wordlistargsz.MatchString(str) {
 		// if z flag is used
-		zlist := ArgArray(str, patZ)
-		for i := 0; i < len(zlist); i++ {
-			fname = append(fname, zlist[i][len("-z file,"):])
+		wordlistz := ArgArray(str, patZ)
+		for i := 0; i < len(wordlistz); i++ {
+			fname = append(fname, wordlistz[i][len("-z file,"):])
 		}
 	}
-	if wRE.MatchString(str) {
+	if wordlistargsw.MatchString(str) {
 		// if w flag is used
-		wlist := ArgArray(str, patW)
-		for i := 0; i < len(wlist); i++ {
-			fname = append(fname, wlist[i][len("-w "):])
+		wordlistw := ArgArray(str, patW)
+		for i := 0; i < len(wordlistw); i++ {
+			fname = append(fname, wordlistw[i][len("-w "):])
 		}
 	}
 	//parse url arguments
 	URLs := urlRE.FindAllString(str, -1)
 	if len(URLs) != 0 {
 		FUZZs := fuzzRE.FindAllString(URLs[0], -1)
-		fm := make(map[string]string)
-		for index, m := range FUZZs {
-			fm[fname[index]] = m
+		mapfuzzs2wordlists := make(map[string]string)
+		for index, fzN := range FUZZs {
+			mapfuzzs2wordlists[fname[index]] = fzN
 		}
 		s.WordListFiles = fname
-		s.Fuzzer.Fuzzmap = fm
+		s.Fuzzer.Fuzzmap = mapfuzzs2wordlists
 
 	}
 }
@@ -68,30 +68,30 @@ func SetFuzzmap(str string, s *State) {
 // Validate :
 func Validate(s *State, argstr, proxy string) {
 	f := regexp.MustCompile("--(hc|sc|hl|sl|hw|sw|hh|sh).[0-9a-zA-Z(,|)]*")
-	filterstring := f.FindString(argstr)
-	if len(filterstring) > 0 {
-		filterslice := strings.Split(filterstring, " ")
-		if len(filterslice) >= 2 {
-			filtertag := filterslice[0]
-			filternum := strings.Split(filterstring, " ")[1:]
-			PrintFilter(s, filtertag)
-			SetFilter(s, strings.Join(filternum, ","))
+	RawFilterStringArgs := f.FindString(argstr)
+	if len(RawFilterStringArgs) > 0 {
+		printfilterlst := strings.Split(RawFilterStringArgs, " ")
+		if len(printfilterlst) >= 2 {
+			printfilterargs := printfilterlst[0]
+			filternumlst := strings.Split(RawFilterStringArgs, " ")[1:]
+			ParsePrintFilterArgs(s, printfilterargs)
+			ConvertPrintFilter(s, strings.Join(filternumlst, ","))
 		}
 	} else {
 		// default
-		PrintFilter(s, "sc")
-		SetFilter(s, "200,301,302,403")
+		ParsePrintFilterArgs(s, "sc")
+		ConvertPrintFilter(s, "200,301,302,403")
 
 	}
-	switch strings.ToLower(s.Mode) {
+	/*switch strings.ToLower(s.Mode) {
 	case "POST":
 		s.Processor = PostProcessor
 	case "GET":
-		s.Processor = GetProcessor
+		s.Processor = GoGet
 	default:
-		s.Processor = GetProcessor
-	}
-	SetFuzzmap(argstr, s)
+		s.Processor = GoGet
+	}*/
+	ParseWordlistArgs(argstr, s)
 	var proxyURLFunc func(*http.Request) (*url.URL, error)
 
 	//TODO: proxy stuff
@@ -116,7 +116,7 @@ func Validate(s *State, argstr, proxy string) {
 	}
 	Code, _ := GoGet(s, s.URL, s.Cookies)
 	if Code == nil {
-		fmt.Printf("Cannot reach %s", s.URL)
+		fmt.Printf("Cannot reach %s\n", s.URL)
 		return
 	}
 }

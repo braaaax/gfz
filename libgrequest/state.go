@@ -49,7 +49,7 @@ type State struct {
 	Recursive      bool
 	Terminate      bool
 	Threads        int
-	Counter          *SafeCounter
+	Counter        *SafeCounter
 	FUZZs          []string
 	Fuzzer         *Fuzz
 }
@@ -68,6 +68,7 @@ func InitState() *State {
 	}
 }
 
+// Fuzz : struct to store info for GetUrl
 type Fuzz struct {
 	Wordlists [][]string
 	Indexes   []int
@@ -75,39 +76,13 @@ type Fuzz struct {
 	Fuzzmap   map[string]string
 }
 
+// InitFuzz : init the Fuzz struct.
 func InitFuzz() *Fuzz {
 	return &Fuzz{}
 }
 
-/*
-func (f *Fuzz) SetWordlist() [][]string {
-	wordlists := [][]string{}
-	var scanner *bufio.Scanner
-	for fn := range f.Fuzzmap {
-		wordlist, err := os.Open(fn)
-		check(err)
-		defer wordlist.Close()
-		scanner = bufio.NewScanner(wordlist)
-		scanner.Split(bufio.ScanWords)
-		var words []string
-		for scanner.Scan() {
-			words = append(words, scanner.Text())
-
-		}
-		wordlists = append(wordlists, words)
-	}
-	// setting up for rloop
-	f.Indexes = append(f.Indexes, len(wordlists))
-	f.Indexes = append(f.Indexes, 0)
-	for _, i := range wordlists {
-		f.Maxes = append(f.Maxes, len(i))
-	}
-
-	return wordlists
-}
-*/
-
-func (s *State) SWordlists() [][]string {
+// SetWordlists :  reads words from files into an array
+func (s *State) SetWordlists() [][]string {
 	wordlists := [][]string{}
 	for _, filename := range s.WordListFiles {
 		fn, err := os.Open(filename)
@@ -134,7 +109,7 @@ func (s *State) SWordlists() [][]string {
 	return wordlists
 }
 
-// Result :
+// Result : struct to hold info for the printer implimented in MakeRequests
 type Result struct {
 	URL   string
 	Body  []byte
@@ -150,7 +125,7 @@ type SafeCounter struct {
 	mux sync.Mutex
 }
 
-// Inc :
+// Inc : increment the counter
 func (c *SafeCounter) Inc() {
 	c.mux.Lock()
 	// Lock so only one goroutine at a time can access the count
