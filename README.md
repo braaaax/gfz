@@ -23,3 +23,4 @@ Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?u
           gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z
 ```
 
+foreign lib: `github.com/fatih/color`
