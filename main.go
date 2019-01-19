@@ -37,7 +37,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 }
 
 func main() {
-	// TESTING
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
 	if len(s.URL) != 0 && libgrequest.IsMapFull(s.Fuzzer.Fuzzmap) {

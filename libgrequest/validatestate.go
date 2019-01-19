@@ -100,7 +100,7 @@ func Validate(s *State, argstr, proxy string) {
 	if proxy != "" {
 		proxyURL, err := url.Parse(proxy)
 		if err != nil {
-			panic("proxy URL is fucked")
+			panic("[!] proxy URL is fucked")
 		}
 		s.ProxyURL = proxyURL
 		proxyURLFunc = http.ProxyURL(s.ProxyURL)
@@ -121,7 +121,7 @@ func Validate(s *State, argstr, proxy string) {
 	// fmt.Printf("\n[+] target URL: " + s.URL)
 	Code, _ := GoGet(s, s.URL, s.Cookies)
 	if Code == nil {
-		fmt.Printf("Cannot reach %s\n", s.URL)
+		fmt.Printf("{!] Cannot reach %s\n", s.URL)
 		return
 	}
 }

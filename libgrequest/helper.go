@@ -162,6 +162,7 @@ func PrintHelp() {
 	fmt.Println("-h/--help                     : This help.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
 	fmt.Println("--follow                      : Follow HTTP redirections.")
+	fmt.Println("-k                            : Skip verify on TLS connection.")
 	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
 	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.")
 	fmt.Println("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.")

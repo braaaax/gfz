@@ -58,7 +58,7 @@ func MakeRequest(s *State, fullURL, cookie string) (*int, error) {
 	if err != nil {
 		if ue, ok := err.(*url.Error); ok {
 			if strings.HasPrefix(ue.Err.Error(), "x509") {
-				fmt.Println("[-] Invalid certificate")
+				fmt.Println("[!] Invalid certificate, try using -k to skip verify.")
 			}
 			if re, ok := ue.Err.(*RedirectError); ok {
 				return &re.StatusCode, nil
