@@ -86,7 +86,7 @@ func Validate(s *State, argstr, proxy string) {
 	}
 	/*switch strings.ToLower(s.Mode) {
 	case "POST":
-		s.Processor = PostProcessor
+		s.Processor = GoPost
 	case "GET":
 		s.Processor = GoGet
 	default:
@@ -95,7 +95,7 @@ func Validate(s *State, argstr, proxy string) {
 	ParseWordlistArgs(argstr, s)
 	var proxyURLFunc func(*http.Request) (*url.URL, error)
 
-	//TODO: proxy stuff
+	//TODO: proxy argparse
 	proxyURLFunc = http.ProxyFromEnvironment
 	if proxy != "" {
 		proxyURL, err := url.Parse(proxy)
@@ -105,7 +105,7 @@ func Validate(s *State, argstr, proxy string) {
 		s.ProxyURL = proxyURL
 		proxyURLFunc = http.ProxyURL(s.ProxyURL)
 	}
-
+	// Client struct initialization
 	s.Client = &http.Client{
 		Transport: &RedirectHandler{
 			State: s,
@@ -124,5 +124,4 @@ func Validate(s *State, argstr, proxy string) {
 		fmt.Printf("Cannot reach %s\n", s.URL)
 		return
 	}
-	// if *Code == 200 {fmt.Printf("\n[+] OK\n")}
 }

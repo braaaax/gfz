@@ -137,11 +137,12 @@ func PrintColorFn(s *State, r *Result) {
 	// blue := color.New(color.FgBlue).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
+	red := color.New(color.FgHiRed).SprintFunc()
+	white := color.New(color.FgHiWhite).SprintFunc()
 	code := res2string(r.Code)
 	output := ""
 
-	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
+	output += fmt.Sprintf("%-20s", parseurl(r.URL))[1:] // to do: just the uri
 	if !s.NoStatus {
 		if strings.HasPrefix(code, "2") {
 			code = green(code)
@@ -152,12 +153,12 @@ func PrintColorFn(s *State, r *Result) {
 		if strings.HasPrefix(code, "4") {
 			code = red(code)
 		}
-		output += fmt.Sprintf(" Status=%-8s", code)
+		output += fmt.Sprintf(" Status %-8s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-8s", yellow(r.Chars))
-		output += fmt.Sprintf(" Words=%-8s", yellow(r.Words))
-		output += fmt.Sprintf(" Lines=%-8s", yellow(r.Lines))
+		output += fmt.Sprintf(" Chars=%-8s", white(r.Chars))
+		output += fmt.Sprintf(" Words=%-8s", white(r.Words))
+		output += fmt.Sprintf(" Lines=%-8s", white(r.Lines))
 	}
 	output += "\n"
 
