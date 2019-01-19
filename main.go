@@ -19,12 +19,14 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.InsecureSSL = libgrequest.ArgBool(str, "-k")
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
 	proxy := libgrequest.ArgString(str, "-p.htt(p|ps)://(.)*")
-
-	// s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
+	s.Quiet = libgrequest.ArgBool(str, "-q")
+	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
+	s.Password = libgrequest.ArgString(str, "--password.[a-zA-Z0-9=/?]*")
+	s.Username = libgrequest.ArgString(str, "--username.[a-zA-Z0-9=/?]*")
+	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
+	
 	// s.Mode = libgrequest.ArgString(str, "-m")
 	// s.OutputFileName = libgrequest.ArgString(str, "-o")
-	// s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
-	// s.Quiet = libgrequest.ArgBool(str, "-q")
 	// s.Recursive = libgrequest.ArgBool(str, "-r")
 
 	if threads > 0 {

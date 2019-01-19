@@ -69,7 +69,9 @@ func MakeRequest(s *State, fullURL, cookie string) (*int, error) {
 	defer resp.Body.Close()
 	r, err := ProcessResponse(fullURL, resp)
 	if err == nil {
-		s.Printer(s, r)
+		if s.Quiet != true {
+			s.Printer(s, r)
+		}
 	}
 	return &resp.StatusCode, nil
 }

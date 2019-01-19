@@ -65,6 +65,7 @@ func InitState() *State {
 		IncludeLength:  false,
 		WildcardForced: false,
 		UseSlash:       false,
+		Quiet:          false,
 	}
 }
 
