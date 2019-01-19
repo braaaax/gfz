@@ -13,7 +13,7 @@ type RedirectHandler struct {
 	State     *State
 }
 
-// RedirectError :
+// RedirectError : redirect err struct from gobuster
 type RedirectError struct {
 	StatusCode int
 }
@@ -22,7 +22,7 @@ func (e *RedirectError) Error() string {
 	return fmt.Sprintf("%-8d", e.StatusCode)
 }
 
-// RoundTrip :
+// RoundTrip : roundtrip from gobuster
 func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, err error) {
 	if rh.State.FollowRedirect {
 		return rh.Transport.RoundTrip(req)
@@ -39,9 +39,9 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 	return resp, err
 }
 
-// MakeRequest :
-func MakeRequest(s *State, fullUrl, cookie string) (*int, error) {
-	req, err := http.NewRequest("GET", fullUrl, nil)
+// MakeRequest : make http request
+func MakeRequest(s *State, fullURL, cookie string) (*int, error) {
+	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
 		return nil, nil
 	}
@@ -67,16 +67,14 @@ func MakeRequest(s *State, fullUrl, cookie string) (*int, error) {
 		return nil, nil
 	}
 	defer resp.Body.Close()
-	//var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
-	r, err := ProcessResponse(fullUrl, resp)
+	r, err := ProcessResponse(fullURL, resp)
 	if err == nil {
 		s.Printer(s, r)
 	}
-	
 	return &resp.StatusCode, nil
 }
 
-// GoGet : returs address of response statuscode and result struct pointer
+// GoGet : returs address of response statuscode and error
 func GoGet(s *State, url, cookie string) (*int, error) {
 	return MakeRequest(s, url, cookie)
 }

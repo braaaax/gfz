@@ -21,7 +21,7 @@ func parseurl(arg string) string {
 	return u.Path
 }
 
-func resulttostring(arg int64) string {
+func res2string(arg int64) string {
 	return strconv.FormatInt(arg, 10)
 }
 
@@ -29,28 +29,28 @@ func resulttostring(arg int64) string {
 // probably a better way to do this
 func PrintChars(s *State, r *Result) {
 	if s.Filter.Contains(r.Chars) == s.Show {
-		PrintFn(s, r)
+		PrintColorFn(s, r)
 	}
 }
 
 // PrintWords :
 func PrintWords(s *State, r *Result) {
 	if s.Filter.Contains(r.Words) == s.Show {
-		PrintFn(s, r)
+		PrintColorFn(s, r)
 	}
 }
 
 // PrintStatus :
 func PrintStatus(s *State, r *Result) {
 	if s.Filter.Contains(r.Code) == s.Show { // issue nil
-		PrintFn(s, r)
+		PrintColorFn(s, r)
 	}
 }
 
 // PrintLines :
 func PrintLines(s *State, r *Result) {
 	if s.Filter.Contains(r.Lines) == s.Show {
-		PrintFn(s, r)
+		PrintColorFn(s, r)
 	}
 }
 
@@ -74,10 +74,10 @@ func ParsePrintFilterArgs(s *State, fs string) {
 	}
 }
 
-// ProcessResponse :
-func ProcessResponse(fullUrl string, resp *http.Response) (*Result, error) {
+// ProcessResponse : process http response pointer
+func ProcessResponse(fullURL string, resp *http.Response) (*Result, error) {
 	//set body
-	var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
+	var r = &Result{URL: fullURL, Code: int64(resp.StatusCode)}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return r, err
@@ -129,8 +129,8 @@ func PrintNoColorFn(s *State, r *Result) {
 	fmt.Printf(output)
 }
 
-// PrintFn : prints corized page info to stdout
-func PrintFn(s *State, r *Result) {
+// PrintColorFn : prints corized page info to stdout
+func PrintColorFn(s *State, r *Result) {
 	if r == nil {
 		return
 	}
@@ -138,7 +138,7 @@ func PrintFn(s *State, r *Result) {
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
 	red := color.New(color.FgRed).SprintFunc()
-	code := resulttostring(r.Code)
+	code := res2string(r.Code)
 	output := ""
 
 	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri

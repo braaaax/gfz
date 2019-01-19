@@ -2,27 +2,27 @@ package libgrequest
 
 import "fmt"
 
-// Processor :
+// Processor : channel controlcenter
 func Processor(s *State) {
 	N := Nrequests(s.Fuzzer.Maxes)
-	urlchan := make(chan string)
-	errorchan := make(chan error, s.Threads) // :TODO err chan
+	urlc := make(chan string)
+	errorc := make(chan error, s.Threads) // :TODO err chan
 
-	go func() { GetURL(s, 0, s.URL, urlchan) }()
+	go func() { GetURL(s, 0, s.URL, urlc) }()
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
-				code, err := GoGet(s, <-urlchan, s.Cookies)
+				code, err := GoGet(s, <-urlc, s.Cookies)
 				if code != nil {
-					errorchan <- err // res could be anything
+					errorc <- err // res could be anything
 					s.Counter.Inc()
 				}
 			}
 		}()
 	}
 	for r := 0; r < N; r++ {
-		<-errorchan
-		fmt.Printf("%d/%d\r", s.Counter.v, N)
+		<-errorc
+		fmt.Printf("[+] %d/%d\r", s.Counter.v, N)
 	}
 }
 

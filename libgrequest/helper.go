@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	// foreign
 	"github.com/fatih/color"
 )
 
@@ -154,16 +155,17 @@ func PrintTop(s *State) {
 // PrintHelp :
 func PrintHelp() {
 	//PrintBanner()
-	fmt.Printf("Usage: ./grequest [options] -w wordlist <url>\n\n")
+	fmt.Printf("\n[+] gofuzz: dirty fork of gobuster to reproduce the functionality of wfuzz\n")
+	fmt.Printf("[+] Author: brax (https://github.com/braaaax/gofuzz)\n")
+	fmt.Printf("\nUsage: ./gofuzz [options] -w wordlist <url>\n\n")
 	fmt.Printf("Options:\n")
-	fmt.Println("-h/--help                     : This help")
-	fmt.Println("--version                     : grequest version details")
-	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default)")
-	fmt.Println("--follow                      : Follow HTTP redirections")
+	fmt.Println("-h/--help                     : This help.")
+	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
+	fmt.Println("--follow                      : Follow HTTP redirections.")
 	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
-	fmt.Println("-b cookie                     : Specify a cookie for the requests")
-	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code/lines/words/chars")
-	fmt.Printf("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code/lines/words/chars\n")
-	fmt.Println("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords wfuzz will replace them with the values of the specified payload.")
-	fmt.Println("Example: grequest -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
+	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.")
+	fmt.Println("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.")
+	fmt.Printf("\nKeyword: FUZZ, ..., FUZnZ  wherever you put these keywords wfuzz will replace them with the values of the specified payload.\n")
+	fmt.Println("Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
+	fmt.Println("          gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z")
 }

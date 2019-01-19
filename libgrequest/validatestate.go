@@ -55,13 +55,14 @@ func ParseWordlistArgs(str string, s *State) {
 	URLs := urlRE.FindAllString(str, -1)
 	if len(URLs) != 0 {
 		FUZZs := fuzzRE.FindAllString(URLs[0], -1)
-		mapfuzzs2wordlists := make(map[string]string)
-		for index, fzN := range FUZZs {
-			mapfuzzs2wordlists[fname[index]] = fzN
+		if len(fname) == len(FUZZs) {
+			mapfuzzs2wordlists := make(map[string]string)
+			for index, fzN := range FUZZs {
+				mapfuzzs2wordlists[fname[index]] = fzN
+			}
+			s.WordListFiles = fname
+			s.Fuzzer.Fuzzmap = mapfuzzs2wordlists
 		}
-		s.WordListFiles = fname
-		s.Fuzzer.Fuzzmap = mapfuzzs2wordlists
-
 	}
 }
 
@@ -114,9 +115,12 @@ func Validate(s *State, argstr, proxy string) {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
+	if len(s.URL) == 0 {return}
+	fmt.Printf("\n"+s.URL)
 	Code, _ := GoGet(s, s.URL, s.Cookies)
 	if Code == nil {
 		fmt.Printf("Cannot reach %s\n", s.URL)
 		return
 	}
+	// if *Code == 200 {fmt.Printf("\n[+] OK\n")}
 }

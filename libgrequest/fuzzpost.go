@@ -2,20 +2,19 @@ package libgrequest
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
 // MakePostRequest :
-func MakePostRequest(s *State, u, p string) (*int, *Result) {
+func MakePostRequest(s *State, u, p string) (*int, error) {
 	req, err := http.NewRequest("POST", u, strings.NewReader(p))
 	if err != nil {
 		return nil, nil
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Cookie", "name=anny")
+	req.Header.Set("Cookie", "name=any")
 	resp, err := s.Client.Do(req)
 	if err != nil {
 		if ue, ok := err.(*url.Error); ok {
@@ -29,23 +28,10 @@ func MakePostRequest(s *State, u, p string) (*int, *Result) {
 		return nil, nil
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-	var r = &Result{URL: u, Body: body}
-	return &resp.StatusCode, r
+	return &resp.StatusCode, nil
 }
 
 // GoPost :
-func GoPost(s *State, url, payload string) (*int, *Result) {
+func GoPost(s *State, url, payload string) (*int, error) {
 	return MakePostRequest(s, url, payload)
-}
-
-// PostProcessor :
-func PostProcessor(s *State, u string, resultChan chan<- Result) {
-	PostResp, PostRes := GoPost(s, u, s.Payload)
-	if PostResp != nil {
-		resultChan <- *PostRes
-	}
 }
