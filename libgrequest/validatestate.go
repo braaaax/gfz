@@ -115,8 +115,10 @@ func Validate(s *State, argstr, proxy string) {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-	if len(s.URL) == 0 {return}
-	fmt.Printf("\n"+s.URL)
+	if len(s.URL) == 0 {
+		return
+	}
+	// fmt.Printf("\n[+] target URL: " + s.URL)
 	Code, _ := GoGet(s, s.URL, s.Cookies)
 	if Code == nil {
 		fmt.Printf("Cannot reach %s\n", s.URL)

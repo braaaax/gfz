@@ -11,7 +11,7 @@ func freplace(url, wordlists string) string {
 	return strings.Replace(url, FUZZmatch, wordlists, 1)
 }
 
-// GetURL :
+// GetURL : Recursive function, feeds urls for GoGet into string channel.
 func GetURL(s *State, currentloop int, u string, uchan chan string) {
 	// indexes []int, maxes[]int, curloop, wordlists [][]string, u string
 	if currentloop == len(s.Fuzzer.Indexes) {

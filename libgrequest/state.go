@@ -109,7 +109,7 @@ func (s *State) SetWordlists() [][]string {
 	return wordlists
 }
 
-// Result : struct to hold info for the printer implimented in MakeRequests
+// Result struct
 type Result struct {
 	URL   string
 	Body  []byte
@@ -125,7 +125,7 @@ type SafeCounter struct {
 	mux sync.Mutex
 }
 
-// Inc : increment the counter
+// Inc : Increment v.
 func (c *SafeCounter) Inc() {
 	c.mux.Lock()
 	// Lock so only one goroutine at a time can access the count
@@ -133,7 +133,7 @@ func (c *SafeCounter) Inc() {
 	c.mux.Unlock()
 }
 
-// InitSafeCounter :
+// InitSafeCounter : Return intialized SafeCounter struct pointer.
 func InitSafeCounter() *SafeCounter {
 	return &SafeCounter{v: 0, mux: sync.Mutex{}}
 }
