@@ -69,11 +69,11 @@ func MakeRequest(s *State, fullUrl, cookie string) (*int, *Result) {
 	defer resp.Body.Close()
 	//var r = &Result{URL: fullUrl, Code: int64(resp.StatusCode)}
 	r := ProcessResults(fullUrl, resp)
-	PrintFn(s, r)
+	s.Printer(s, r)
 	return &resp.StatusCode, r
 }
 
-// GoGet :
+// GoGet : returs address of response statuscode and result struct pointer
 func GoGet(s *State, url, cookie string) (*int, *Result) {
 	return MakeRequest(s, url, cookie)
 }

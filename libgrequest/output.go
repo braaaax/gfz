@@ -156,6 +156,7 @@ func PrintFn(s *State, r *Result) {
 		output += fmt.Sprintf(" Lines=%-8s", yellow(r.Lines))
 	}
 	output += "\n"
+	
 	if s.OutputFile != nil {
 		WriteToFile(output, s)
 	}
@@ -164,5 +165,6 @@ func PrintFn(s *State, r *Result) {
 	if len(match) == 0 {
 		fmt.Printf(output)
 	}
+
 
 }

@@ -12,7 +12,7 @@ import (
 // ParseCmdLine : eval cmdline arguments
 func ParseCmdLine(str string) *libgrequest.State {
 	s := libgrequest.InitState()
-	// s.Cache = libgrequest.InitSafeCache()
+	s.Counter = libgrequest.InitSafeCounter()
 	s.Fuzzer = libgrequest.InitFuzz()
 	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
 	s.Mode = libgrequest.ArgString(str, "-m")

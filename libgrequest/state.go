@@ -49,6 +49,7 @@ type State struct {
 	Recursive      bool
 	Terminate      bool
 	Threads        int
+	Counter          *SafeCounter
 	FUZZs          []string
 	Fuzzer         *Fuzz
 }
@@ -143,39 +144,21 @@ type Result struct {
 	Code  int64
 }
 
-// will impliment a counter later
-// SafeCache is safe to use concurrently.
-type SafeCache struct {
-	v   []string
+// SafeCounter is safe to use concurrently.
+type SafeCounter struct {
+	v   int
 	mux sync.Mutex
 }
 
-// Contains :
-func (c *SafeCache) Contains(s string) bool {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-	for i, url := range c.v {
-		if url == c.v[i] {
-			return true
-		}
-	}
-	return false
-}
-
 // Inc :
-func (c *SafeCache) Inc(s string) {
+func (c *SafeCounter) Inc() {
 	c.mux.Lock()
-	// Lock so only one goroutine at a time can access the map c.v.
-	c.v = append(c.v, s)
+	// Lock so only one goroutine at a time can access the count
+	c.v++
 	c.mux.Unlock()
 }
 
-func (c *SafeCache) Get() string {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-	return c.v[len(c.v)-1]
-}
-
-func InitSafeCache() *SafeCache {
-	return &SafeCache{v: []string{}, mux: sync.Mutex{}}
+// InitSafeCounter :
+func InitSafeCounter() *SafeCounter {
+	return &SafeCounter{v: 0, mux: sync.Mutex{}}
 }
