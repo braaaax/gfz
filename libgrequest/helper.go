@@ -134,7 +134,7 @@ func int2string(i int) string {
 	return t
 }
 
-func Nrequests(maxes []int) int {
+func nrequests(maxes []int) int {
 	c := 1
 	for i := range maxes {
 		c = maxes[i] * c
@@ -152,9 +152,8 @@ func PrintTop(s *State) {
 	fmt.Printf("\n")
 }
 
-// PrintHelp :
+// PrintHelp : cli help info
 func PrintHelp() {
-	//PrintBanner()
 	fmt.Printf("\n[+] gofuzz: dirty fork of gobuster to reproduce the functionality of wfuzz\n")
 	fmt.Printf("[+] Author: brax (https://github.com/braaaax/gofuzz)\n")
 	fmt.Printf("\nUsage: ./gofuzz [options] -w wordlist <url>\n\n")
@@ -169,4 +168,5 @@ func PrintHelp() {
 	fmt.Printf("\nKeyword: FUZZ, ..., FUZnZ  wherever you put these keywords wfuzz will replace them with the values of the specified payload.\n")
 	fmt.Println("Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 	fmt.Println("          gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z")
+	fmt.Println("          gofuzz -t 32 -k --follow -w somelist.txt https://someTLSsite.com/FUZZ")
 }

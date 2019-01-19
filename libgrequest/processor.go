@@ -4,7 +4,7 @@ import "fmt"
 
 // Processor : channel controlcenter
 func Processor(s *State) {
-	N := Nrequests(s.Fuzzer.Maxes)
+	N := nrequests(s.Fuzzer.Maxes)
 	urlc := make(chan string)
 	errorc := make(chan error, s.Threads) // :TODO err chan
 

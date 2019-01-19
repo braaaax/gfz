@@ -1,7 +1,12 @@
 Aims to reproduce wfuzz's functionality and versatility and combine it with go's concurrency. Based on gobuster, written by OJ (theColonial)
 
-most basic usage:
+build:
+`go build`
 
+build for windows:
+`GOOS=windows GOARCH=amd64 go build -o gofuzz.exe`
+
+most basic usage:
 `gofuzz -w wordlist1 -w wordlist2 http://someip/FUZZFUZ2Z`
 
 ```
@@ -23,4 +28,6 @@ Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?u
           gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z
 ```
 
-foreign lib: `github.com/fatih/color`
+foreign lib: 
+`github.com/fatih/color`
+(note: development on this library is halted.)

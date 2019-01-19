@@ -14,17 +14,18 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s := libgrequest.InitState()
 	s.Counter = libgrequest.InitSafeCounter()
 	s.Fuzzer = libgrequest.InitFuzz()
-	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
-	s.Mode = libgrequest.ArgString(str, "-m")
-	s.OutputFileName = libgrequest.ArgString(str, "-o")
 	s.FollowRedirect = libgrequest.ArgBool(str, "--follow")
-	proxy := libgrequest.ArgString(str, "-p.htt(p|ps)://(.)*")
 	s.URL = libgrequest.ArgString(str, ".htt(p|ps).+")
-	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
 	s.InsecureSSL = libgrequest.ArgBool(str, "-k")
-	s.Quiet = libgrequest.ArgBool(str, "-q")
-	s.Recursive = libgrequest.ArgBool(str, "-r")
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
+	proxy := libgrequest.ArgString(str, "-p.htt(p|ps)://(.)*")
+
+	// s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
+	// s.Mode = libgrequest.ArgString(str, "-m")
+	// s.OutputFileName = libgrequest.ArgString(str, "-o")
+	// s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
+	// s.Quiet = libgrequest.ArgBool(str, "-q")
+	// s.Recursive = libgrequest.ArgBool(str, "-r")
 
 	if threads > 0 {
 		s.Threads = threads
