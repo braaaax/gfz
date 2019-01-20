@@ -44,7 +44,7 @@ func main() {
 	s := ParseCmdLine(strings.Join(argstr, " "))
 
 	// This logic should probably be in Validate
-	if len(s.URL) != 0 || len(s.Fuzzer.Wordlists[0]) != 0 {
+	if len(s.URL) != 0 || len(s.Fuzzer.Wordlists) != 0 {
 		libgrequest.PrintTop(s)
 		Code, _ := libgrequest.GoGet(s, s.URL, s.Cookies)
 		if Code == nil {
