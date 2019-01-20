@@ -66,6 +66,7 @@ func InitState() *State {
 		WildcardForced: false,
 		UseSlash:       false,
 		Quiet:          false,
+		Cookies:        "",
 	}
 }
 
