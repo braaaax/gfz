@@ -86,18 +86,20 @@ func InitFuzz() *Fuzz {
 // SetWordlists :  reads words from files into an array
 func (s *State) SetWordlists() [][]string {
 	wordlists := [][]string{}
-	
-	for _, filename := range s.WordListFiles {
-		fn, err := os.Open(filename)
-		check(err)
-		defer fn.Close()
-		var lines []string
-		scanner := bufio.NewScanner(fn)
-		for scanner.Scan() {
-			lines = append(lines, scanner.Text())
+	if len(s.Fuzzer.Wordlists) == 0 {
+		for _, filename := range s.WordListFiles {
+			fn, err := os.Open(filename)
+			check(err)
+			defer fn.Close()
+			var lines []string
+			scanner := bufio.NewScanner(fn)
+			for scanner.Scan() {
+				lines = append(lines, scanner.Text())
+			}
+			wordlists = append(wordlists, lines)
 		}
-		wordlists = append(wordlists, lines)
 	}
+		
 	
 	// fmt.Println(s.Fuzzer.Wordlists)
 	if len(wordlists) == 0 {wordlists = s.Fuzzer.Wordlists}

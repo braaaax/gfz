@@ -170,9 +170,9 @@ func PrintColorFn(s *State, r *Result) {
 
 	// print result struct data
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf("%s%s%-8s", " Chars", "=", res2string(r.Chars)) // note to self: color for result int64s add about 10 spaces
-		output += fmt.Sprintf("%s%s%-8s", " Words", "=", res2string(r.Words))
-		output += fmt.Sprintf("%s%s%-8s", " Lines", "=", res2string(r.Lines))
+		output += fmt.Sprintf("%s%s%-6.8s", " Chars", "=", res2string(r.Chars)) // note to self: color for result int64s add about 10 spaces
+		output += fmt.Sprintf("%s%s%-6.8s", " Words", "=", res2string(r.Words))
+		output += fmt.Sprintf("%s%s%-6.8s", " Lines", "=", res2string(r.Lines))
 	}
 	output += "\n"
 
