@@ -6,10 +6,11 @@ import (
 	"net/url"
 	"os"
 	"sync"
+	// "fmt"
 )
 
 // MethodProc :
-type MethodProc func(*State, string, string) (*int, *Result)
+//type MethodProc func(*State, string, string) (*int, *Result)
 
 // ProcFunc :
 type ProcFunc func(*State, string, chan<- Result)
@@ -85,6 +86,7 @@ func InitFuzz() *Fuzz {
 // SetWordlists :  reads words from files into an array
 func (s *State) SetWordlists() [][]string {
 	wordlists := [][]string{}
+	
 	for _, filename := range s.WordListFiles {
 		fn, err := os.Open(filename)
 		check(err)
@@ -95,8 +97,11 @@ func (s *State) SetWordlists() [][]string {
 			lines = append(lines, scanner.Text())
 		}
 		wordlists = append(wordlists, lines)
-
 	}
+	
+	// fmt.Println(s.Fuzzer.Wordlists)
+	wordlists = s.Fuzzer.Wordlists
+	
 	// setting up for rloop
 	if len(wordlists) == 1 {
 		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)

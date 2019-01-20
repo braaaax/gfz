@@ -25,26 +25,51 @@ func ConvertPrintFilter(s *State, filternum string) {
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) {
-	var patZ = "-z.(file|list),[/a-zA-A0-9.-]*"
-	var patW = "-w.[/0-9a-zA-Z._-]*"
+	var patZ = "-z (file|File|FILE),[/a-zA-A0-9.-_]*"
+	var patZ2 = "-z (range|Range|RANGE),[0-9-]*" // put a limit
+	var patW = "-w [/0-9a-zA-Z._-]*"
 	var patFuzz = "FUZ(Z|[0-9]Z)"
 	var patURL = "htt(p|ps)://(.)*"
 	var fname []string
 
-	wordlistargsz := regexp.MustCompile(patZ)
-	wordlistargsw := regexp.MustCompile(patW)
+	wordlistargszfile := regexp.MustCompile(patZ)
+	wordlistargszrange := regexp.MustCompile(patZ2)
+	wordlistargswfile := regexp.MustCompile(patW)
 	fuzzRE := regexp.MustCompile(patFuzz)
 	urlRE := regexp.MustCompile(patURL)
 
 	//Parse filename arguments
-	if wordlistargsz.MatchString(str) {
+	if wordlistargszfile.MatchString(str) && !wordlistargszrange.MatchString(str) {
 		// if z flag is used
 		wordlistz := ArgArray(str, patZ)
 		for i := 0; i < len(wordlistz); i++ {
 			fname = append(fname, wordlistz[i][len("-z file,"):])
 		}
 	}
-	if wordlistargsw.MatchString(str) {
+	if wordlistargszrange.MatchString(str) {
+		rangewordlists := [][]string{}
+		numberstrings := []string{}
+		// get string from argparse paterrn
+
+		patresult := wordlistargszrange.FindAllString(str, -1)
+		if len(patresult) == 0 {
+			fmt.Println("patresult: ", patresult)
+
+		}
+		// return list of number therein
+		numRE := regexp.MustCompile("[0-9]+")
+		numbs := numRE.FindAllString(patresult[0], -1)
+		if len(numbs) != 0 {
+			start, _ := strconv.Atoi(numbs[0])
+			end, _ := strconv.Atoi(numbs[1])
+			for i := start; i < end; i++ {
+				numberstrings = append(numberstrings, strconv.Itoa(i))
+			}
+			rangewordlists = append(rangewordlists, numberstrings)
+			s.Fuzzer.Wordlists = rangewordlists
+		}
+	}
+	if wordlistargswfile.MatchString(str) {
 		// if w flag is used
 		wordlistw := ArgArray(str, patW)
 		for i := 0; i < len(wordlistw); i++ {
@@ -66,8 +91,9 @@ func ParseWordlistArgs(str string, s *State) {
 	}
 }
 
-// Validate :
+// Validate : final input error checks before run.
 func Validate(s *State, argstr, proxy string) {
+	// parse output filter args
 	f := regexp.MustCompile("--(hc|sc|hl|sl|hw|sw|hh|sh).[0-9a-zA-Z(,|)]*")
 	RawFilterStringArgs := f.FindString(argstr)
 	if len(RawFilterStringArgs) > 0 {
@@ -84,6 +110,8 @@ func Validate(s *State, argstr, proxy string) {
 		ConvertPrintFilter(s, "200,301,302,403")
 
 	}
+
+	// set mode for when GoPost is added
 	/*switch strings.ToLower(s.Mode) {
 	case "POST":
 		s.Processor = GoPost
@@ -92,10 +120,11 @@ func Validate(s *State, argstr, proxy string) {
 	default:
 		s.Processor = GoGet
 	}*/
-	ParseWordlistArgs(argstr, s)
-	var proxyURLFunc func(*http.Request) (*url.URL, error)
 
-	//TODO: proxy argparse
+	ParseWordlistArgs(argstr, s)
+
+	// set proxy info
+	var proxyURLFunc func(*http.Request) (*url.URL, error)
 	proxyURLFunc = http.ProxyFromEnvironment
 	if proxy != "" {
 		proxyURL, err := url.Parse(proxy)
@@ -105,6 +134,7 @@ func Validate(s *State, argstr, proxy string) {
 		s.ProxyURL = proxyURL
 		proxyURLFunc = http.ProxyURL(s.ProxyURL)
 	}
+
 	// Client struct initialization
 	s.Client = &http.Client{
 		Transport: &RedirectHandler{
@@ -115,6 +145,8 @@ func Validate(s *State, argstr, proxy string) {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
+
+	// Pass/Fail
 	if len(s.URL) == 0 {
 		return
 	}

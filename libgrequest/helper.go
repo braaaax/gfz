@@ -20,43 +20,43 @@ func check(e error) {
 	}
 }
 
-// IntSet :
+// IntSet : Set value maps int64 to bool.
 type IntSet struct {
 	Set map[int64]bool
 }
 
-// StringSet :
+// StringSet : Set value maps string to bool.
 type StringSet struct {
 	Set map[string]bool
 }
 
-// Contains :
+// Contains : Contains int.
 func (set *IntSet) Contains(i int64) bool {
 	_, found := set.Set[i]
 	return found
 }
 
-// Add :
+// Add : Add int.
 func (set *IntSet) Add(i int64) bool {
 	_, found := set.Set[i]
 	set.Set[i] = true
 	return !found
 }
 
-// Contains :
+// Contains : Contains string.
 func (set *StringSet) Contains(s string) bool {
 	_, found := set.Set[s]
 	return found
 }
 
-// Add :
+// Add : Add string.
 func (set *StringSet) Add(s string) bool {
 	_, found := set.Set[s]
 	set.Set[s] = true
 	return !found
 }
 
-// IsMapFull :
+// IsMapFull : check map[string][string] for "" values.
 func IsMapFull(fm map[string]string) bool {
 	/* check whether there are keys without values */
 	var r bool
@@ -70,7 +70,7 @@ func IsMapFull(fm map[string]string) bool {
 	return r
 }
 
-// ArgBool : turn commandline pat into true or false
+// ArgBool : Turn commandline pat into true or false
 func ArgBool(s, p string) bool {
 	re := regexp.MustCompile(p)
 	match := re.FindAllString(s, -1)
@@ -80,7 +80,7 @@ func ArgBool(s, p string) bool {
 	return false
 }
 
-// ArgString : turn commandline pat into string
+// ArgString : Turn commandline pat into string
 func ArgString(s, p string) string {
 	re := regexp.MustCompile(p)
 	match := re.FindAllString(s, -1)
@@ -91,7 +91,7 @@ func ArgString(s, p string) string {
 	return ""
 }
 
-// ArgInt : turn commandline pat into int
+// ArgInt : Turn commandline pat into int
 func ArgInt(s, p string) int {
 	re := regexp.MustCompile(p)
 	x := re.FindAllString(s, -1)
@@ -107,7 +107,37 @@ func ArgInt(s, p string) int {
 	return res
 }
 
-// ArgArray : turn commandline pat into array
+func betterargint(s, p string, res []int) {
+	// get string from argparse paterrn
+	pat := regexp.MustCompile(p)
+	patresult := pat.FindAllString(s, -1)
+	if len(patresult) == 0 {
+		fmt.Println("patresult: ", patresult)
+		
+	}
+	// return list of number therein
+	numRE := regexp.MustCompile("[0-9]+")
+	numbs := numRE.FindAllString(patresult[0], -1)
+	if len(numbs) != 0 {
+		fmt.Println("numbs:", numbs)
+		for _, i := range numbs {
+			argint, err := strconv.Atoi(i)
+			fmt.Println("argint", argint)
+			if err != nil {
+				res = append(res, argint)
+				
+			} 
+		}
+		start := res[0]; end := res[1]
+		for i:=start; i<end; i++{
+			
+		}
+	}
+	
+}
+
+
+// ArgArray : Turn commandline pat into array
 func ArgArray(s, p string) []string {
 	re := regexp.MustCompile(p)
 	match := re.FindAllString(s, -1)

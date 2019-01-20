@@ -35,7 +35,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 	} else {
 		s.Threads = 10
 	}
-
 	libgrequest.Validate(s, str, proxy)
 	return s
 }
@@ -43,13 +42,22 @@ func ParseCmdLine(str string) *libgrequest.State {
 func main() {
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
-	if len(s.URL) != 0 && libgrequest.IsMapFull(s.Fuzzer.Fuzzmap) {
+
+	// This logic should probably be in Validate
+	if len(s.URL) != 0 || len(s.Fuzzer.Wordlists[0]) != 0 {
 		libgrequest.PrintTop(s)
 		Code, _ := libgrequest.GoGet(s, s.URL, s.Cookies)
 		if Code == nil {
 			fmt.Printf("Cannot reach %s", s.URL)
 			return
 		}
+		// range exeception
+		if len(s.Fuzzer.Wordlists[0]) != 0 {
+			libgrequest.Processor(s)
+			return
+		}
+
+		// if no range wordlistscome from here
 		s.Fuzzer.Wordlists = s.SetWordlists()
 		if len(s.WordListFiles) != len(s.Fuzzer.Fuzzmap) {
 			libgrequest.PrintHelp()
@@ -60,6 +68,8 @@ func main() {
 		libgrequest.PrintHelp()
 		return
 	}
+
+	// runs gofuzz
 	libgrequest.Processor(s)
 	return
 }
