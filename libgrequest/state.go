@@ -100,7 +100,7 @@ func (s *State) SetWordlists() [][]string {
 	}
 	
 	// fmt.Println(s.Fuzzer.Wordlists)
-	wordlists = s.Fuzzer.Wordlists
+	if len(wordlists) == 0 {wordlists = s.Fuzzer.Wordlists}
 	
 	// setting up for rloop
 	if len(wordlists) == 1 {

@@ -52,7 +52,7 @@ func main() {
 			return
 		}
 		// range exeception
-		if len(s.Fuzzer.Wordlists[0]) != 0 {
+		if len(s.Fuzzer.Wordlists) != 0 {
 			libgrequest.Processor(s)
 			return
 		}
