@@ -33,6 +33,7 @@ type State struct {
 	IsWildcard     bool
 	ProxyURL       *url.URL
 	NoStatus       bool
+	NoColor        bool
 	OutputFile     *os.File
 	OutputFileName string
 	InsecureSSL    bool
@@ -65,8 +66,6 @@ func InitState() *State {
 		IncludeLength:  false,
 		WildcardForced: false,
 		UseSlash:       false,
-		Quiet:          false,
-		Cookies:        "",
 	}
 }
 

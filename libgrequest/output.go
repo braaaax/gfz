@@ -115,12 +115,12 @@ func PrintNoColorFn(s *State, r *Result) {
 		if code == "403" {
 			color.Red(code)
 		}
-		output += fmt.Sprintf(" Status: %-8s", code)
+		output += fmt.Sprintf(" Status: %-10s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-8d", r.Chars)
-		output += fmt.Sprintf(" Words=%-8d", r.Words)
-		output += fmt.Sprintf(" Lines=%-8d", r.Lines)
+		output += fmt.Sprintf(" Chars=%-10d", r.Chars)
+		output += fmt.Sprintf(" Words=%-10d", r.Words)
+		output += fmt.Sprintf(" Lines=%-10d", r.Lines)
 	}
 	output += "\n"
 	if s.OutputFile != nil {
@@ -134,7 +134,13 @@ func PrintColorFn(s *State, r *Result) {
 	if r == nil {
 		return
 	}
-	// blue := color.New(color.FgBlue).SprintFunc()
+
+	if s.NoColor == true {
+		PrintNoColorFn(s, r)
+		return
+	}
+
+	hiblk := color.New(color.FgHiBlack).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
 	red := color.New(color.FgHiRed).SprintFunc()
@@ -153,12 +159,12 @@ func PrintColorFn(s *State, r *Result) {
 		if strings.HasPrefix(code, "4") {
 			code = red(code)
 		}
-		output += fmt.Sprintf(" Status %-8s", code)
+		output += fmt.Sprintf(" Status %-10s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-8s", white(r.Chars))
-		output += fmt.Sprintf(" Words=%-8s", white(r.Words))
-		output += fmt.Sprintf(" Lines=%-8s", white(r.Lines))
+		output += fmt.Sprintf("%s%s%-10s", " Chars", hiblk("="), white(r.Chars))
+		output += fmt.Sprintf("%s%s%-10s", " Words", hiblk("="), white(r.Words))
+		output += fmt.Sprintf("%s%s%-10s", " Lines", hiblk("="), white(r.Lines))
 	}
 	output += "\n"
 
