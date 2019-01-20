@@ -162,7 +162,7 @@ func PrintHelp() {
 	fmt.Println("-h/--help                     : This help.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
 	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
-	fmt.Println("-k                            : Don't Skip verify on TLS connections.")
+	fmt.Println("-k                            : Strict TLS connections.")
 	fmt.Println("-q                            : Quiet mode.")
 	fmt.Println("-p URL                        : Specify proxy URL.")
 	fmt.Println("-b COOKIE                     : Specify cookie.")
