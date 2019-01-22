@@ -73,7 +73,7 @@ type Fuzz struct {
 	Wordlists [][]string
 	Indexes   []int
 	Maxes     []int
-	Fuzzmap   map[string]string
+	//Fuzzmap   map[string]string
 }
 
 // InitFuzz : init the Fuzz struct.

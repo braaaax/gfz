@@ -44,9 +44,10 @@ func ParseCmdLine(str string) *libgrequest.State {
 func main() {
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
-	if s != nil {
-		fmt.Printf("State: %+v", s)
-		// libgrequest.Processor(s)
+	if s != nil && len(os.Args) < 1 {
+		// fmt.Printf("State: %+v\n", s)
+		libgrequest.PrintTop(s)
+		libgrequest.Processor(s)
 	} else {
 		libgrequest.PrintHelp()
 	}

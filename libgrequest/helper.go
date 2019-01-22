@@ -136,14 +136,6 @@ func betterargint(s, p string, res []int) {
 	
 }
 
-
-// ArgArray : Turn commandline pat into array
-func ArgArray(s, p string) []string {
-	re := regexp.MustCompile(p)
-	match := re.FindAllString(s, -1)
-	return match
-}
-
 // PrepareSignalHandler : Signal handler straight from gobuster to catch CTRL+C
 func PrepareSignalHandler(s *State) {
 	s.SignalChan = make(chan os.Signal, 1)
@@ -192,7 +184,7 @@ func PrintHelp() {
 	fmt.Println("-h/--help                     : This help.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
 	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
-	fmt.Println("--no-color                    : Monotone output.")
+	// fmt.Println("--no-color                    : Monotone output.")
 	fmt.Println("-k                            : Strict TLS connections.")
 	fmt.Println("-q                            : Quiet mode.")
 	fmt.Println("-p URL                        : Specify proxy URL.")
