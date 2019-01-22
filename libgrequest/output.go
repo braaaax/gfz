@@ -124,9 +124,9 @@ func PrintNoColorFn(s *State, r *Result) {
 		output += fmt.Sprintf(" Status: %-10s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-6.8d", res2string(r.Chars)
-		output += fmt.Sprintf(" Words=%-6.8d", res2string(r.Words)
-		output += fmt.Sprintf(" Lines=%-6.8d", res2string(r.Lines))
+		output += fmt.Sprintf(" Chars=%-6.8s", res2string(r.Chars))
+		output += fmt.Sprintf(" Words=%-6.8s", res2string(r.Words))
+		output += fmt.Sprintf(" Lines=%-6.8s", res2string(r.Lines))
 	}
 	output += "\n"
 	if s.OutputFile != nil {
