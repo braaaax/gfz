@@ -1,12 +1,10 @@
 package libgrequest
 
 import (
-	"bufio"
 	"net/http"
 	"net/url"
 	"os"
 	"sync"
-	// "fmt"
 )
 
 // MethodProc :
@@ -81,40 +79,6 @@ type Fuzz struct {
 // InitFuzz : init the Fuzz struct.
 func InitFuzz() *Fuzz {
 	return &Fuzz{}
-}
-
-// SetWordlists :  reads words from files into an array
-func (s *State) SetWordlists() [][]string {
-	wordlists := [][]string{}
-	if len(s.Fuzzer.Wordlists) == 0 {
-		for _, filename := range s.WordListFiles {
-			fn, err := os.Open(filename)
-			check(err)
-			defer fn.Close()
-			var lines []string
-			scanner := bufio.NewScanner(fn)
-			for scanner.Scan() {
-				lines = append(lines, scanner.Text())
-			}
-			wordlists = append(wordlists, lines)
-		}
-	}
-		
-	
-	// fmt.Println(s.Fuzzer.Wordlists)
-	if len(wordlists) == 0 {wordlists = s.Fuzzer.Wordlists}
-	
-	// setting up for rloop
-	if len(wordlists) == 1 {
-		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
-	} else {
-		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, len(wordlists))
-		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
-	}
-	for _, i := range wordlists {
-		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
-	}
-	return wordlists
 }
 
 // Result struct

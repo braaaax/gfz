@@ -109,18 +109,12 @@ func PrintNoColorFn(s *State, r *Result) {
 	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
 	if !s.NoStatus {
 		code := strconv.FormatInt(r.Code, 10)
-		if code == "200" {
-			color.Green(code)
-		}
-		if code == "403" {
-			color.Red(code)
-		}
 		output += fmt.Sprintf(" Status: %-10s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-5d", r.Chars)
-		output += fmt.Sprintf(" Words=%-5d", r.Words)
-		output += fmt.Sprintf(" Lines=%-5d", r.Lines)
+		output += fmt.Sprintf(" Chars=%-6.8d", r.Chars)
+		output += fmt.Sprintf(" Words=%-6.8d", r.Words)
+		output += fmt.Sprintf(" Lines=%-6.8d", r.Lines)
 	}
 	output += "\n"
 	if s.OutputFile != nil {
