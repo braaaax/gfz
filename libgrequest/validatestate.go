@@ -56,6 +56,7 @@ func ParseWordlistArgs(str string, s *State) bool {
 	for N := 0; N < len(match); N++ {
 		if zfile.MatchString(match[N]) {
 			s.readfile(match[N][len("-z file,"):])
+			s.WordListFiles = append(s.WordListFiles, match[N][len("-z file,"):])
 		}
 		if zrange.MatchString(match[N]) {
 			numRE := regexp.MustCompile("[0-9]+")
@@ -67,16 +68,19 @@ func ParseWordlistArgs(str string, s *State) bool {
 					zrangewordlist = append(zrangewordlist, strconv.Itoa(i))
 				}
 				s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, zrangewordlist)
+				s.WordListFiles = append(s.WordListFiles, match[N][len("-z range,"):])
 			}
 		}
 		if zlist.MatchString(match[N]) {
 			zlistwordlist = strings.Split(match[N][len("-z list,"):], "-")
 			if len(zlistwordlist) != 0 {
 				s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, zlistwordlist)
+				s.WordListFiles = append(s.WordListFiles, match[N][len("-z list,"):])
 			}
 		}
 		if wfile.MatchString(match[N]) {
 			s.readfile(match[N][len("-w "):])
+			s.WordListFiles = append(s.WordListFiles, match[N][len("-w "):])
 		}
 		// after payload for loop
 	}

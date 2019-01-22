@@ -167,7 +167,7 @@ func nrequests(maxes []int) int {
 // PrintTop : beginning of output
 func PrintTop(s *State) {
 	ye := color.New(color.FgYellow).SprintFunc()
-	wordlists := strings.Join(s.WordListFiles, ", ") // color.New(color.FgHiWhite).SprintFunc()
+	wordlists := strings.Join(s.WordListFiles, ", ")
 	fmt.Printf("\n")
 	fmt.Println("[+] Target: ", ye(s.URL))
 	fmt.Println("[+] Wordlists: ", ye(wordlists))
