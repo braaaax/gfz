@@ -113,7 +113,7 @@ func betterargint(s, p string, res []int) {
 	patresult := pat.FindAllString(s, -1)
 	if len(patresult) == 0 {
 		fmt.Println("patresult: ", patresult)
-		
+
 	}
 	// return list of number therein
 	numRE := regexp.MustCompile("[0-9]+")
@@ -125,15 +125,16 @@ func betterargint(s, p string, res []int) {
 			fmt.Println("argint", argint)
 			if err != nil {
 				res = append(res, argint)
-				
-			} 
+
+			}
 		}
-		start := res[0]; end := res[1]
-		for i:=start; i<end; i++{
-			
+		start := res[0]
+		end := res[1]
+		for i := start; i < end; i++ {
+
 		}
 	}
-	
+
 }
 
 // PrepareSignalHandler : Signal handler straight from gobuster to catch CTRL+C
@@ -164,13 +165,21 @@ func nrequests(maxes []int) int {
 	return c
 }
 
-// PrintTop : beginning of output
-func PrintTop(s *State) {
+// PrintTopColor : beginning of output
+func PrintTopColor(s *State) {
 	ye := color.New(color.FgYellow).SprintFunc()
 	wordlists := strings.Join(s.WordListFiles, ", ")
 	fmt.Printf("\n")
 	fmt.Println("[+] Target: ", ye(s.URL))
 	fmt.Println("[+] Wordlists: ", ye(wordlists))
+	fmt.Printf("\n")
+}
+
+func PrintTopNoColor(s *State) {
+	wordlists := strings.Join(s.WordListFiles, ", ")
+	fmt.Printf("\n")
+	fmt.Println("[+] Target: ", s.URL)
+	fmt.Println("[+] Wordlists: ", wordlists)
 	fmt.Printf("\n")
 }
 
@@ -184,7 +193,7 @@ func PrintHelp() {
 	fmt.Println("-h/--help                     : This help.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
 	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
-	// fmt.Println("--no-color                    : Monotone output.")
+	fmt.Println("--no-color                    : Monotone output.")
 	fmt.Println("-k                            : Strict TLS connections.")
 	fmt.Println("-q                            : Quiet mode.")
 	fmt.Println("-p URL                        : Specify proxy URL.")

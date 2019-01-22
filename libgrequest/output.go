@@ -29,6 +29,9 @@ func res2string(arg int64) string {
 // probably a better way to do this
 func PrintChars(s *State, r *Result) {
 	if s.Filter.Contains(r.Chars) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
 		PrintColorFn(s, r)
 	}
 }
@@ -36,6 +39,9 @@ func PrintChars(s *State, r *Result) {
 // PrintWords :
 func PrintWords(s *State, r *Result) {
 	if s.Filter.Contains(r.Words) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
 		PrintColorFn(s, r)
 	}
 }
@@ -43,6 +49,9 @@ func PrintWords(s *State, r *Result) {
 // PrintStatus :
 func PrintStatus(s *State, r *Result) {
 	if s.Filter.Contains(r.Code) == s.Show { // issue nil
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
 		PrintColorFn(s, r)
 	}
 }
@@ -50,6 +59,9 @@ func PrintStatus(s *State, r *Result) {
 // PrintLines :
 func PrintLines(s *State, r *Result) {
 	if s.Filter.Contains(r.Lines) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
 		PrintColorFn(s, r)
 	}
 }
@@ -112,9 +124,9 @@ func PrintNoColorFn(s *State, r *Result) {
 		output += fmt.Sprintf(" Status: %-10s", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-6.8d", r.Chars)
-		output += fmt.Sprintf(" Words=%-6.8d", r.Words)
-		output += fmt.Sprintf(" Lines=%-6.8d", r.Lines)
+		output += fmt.Sprintf(" Chars=%-6.8d", res2string(r.Chars)
+		output += fmt.Sprintf(" Words=%-6.8d", res2string(r.Words)
+		output += fmt.Sprintf(" Lines=%-6.8d", res2string(r.Lines))
 	}
 	output += "\n"
 	if s.OutputFile != nil {
