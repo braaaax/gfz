@@ -56,20 +56,6 @@ func (set *StringSet) Add(s string) bool {
 	return !found
 }
 
-// IsMapFull : check map[string][string] for "" values.
-func IsMapFull(fm map[string]string) bool {
-	/* check whether there are keys without values */
-	var r bool
-	for k := range fm {
-		if fm[k] != "" {
-			r = true
-		} else {
-			r = false
-		}
-	}
-	return r
-}
-
 // ArgBool : Turn commandline pat into true or false
 func ArgBool(s, p string) bool {
 	re := regexp.MustCompile(p)
@@ -107,36 +93,6 @@ func ArgInt(s, p string) int {
 	return res
 }
 
-func betterargint(s, p string, res []int) {
-	// get string from argparse paterrn
-	pat := regexp.MustCompile(p)
-	patresult := pat.FindAllString(s, -1)
-	if len(patresult) == 0 {
-		fmt.Println("patresult: ", patresult)
-
-	}
-	// return list of number therein
-	numRE := regexp.MustCompile("[0-9]+")
-	numbs := numRE.FindAllString(patresult[0], -1)
-	if len(numbs) != 0 {
-		fmt.Println("numbs:", numbs)
-		for _, i := range numbs {
-			argint, err := strconv.Atoi(i)
-			fmt.Println("argint", argint)
-			if err != nil {
-				res = append(res, argint)
-
-			}
-		}
-		start := res[0]
-		end := res[1]
-		for i := start; i < end; i++ {
-
-		}
-	}
-
-}
-
 // PrepareSignalHandler : Signal handler straight from gobuster to catch CTRL+C
 func PrepareSignalHandler(s *State) {
 	s.SignalChan = make(chan os.Signal, 1)
@@ -157,7 +113,7 @@ func int2string(i int) string {
 	return t
 }
 
-func nrequests(maxes []int) int {
+func TotalRequests(maxes []int) int {
 	c := 1
 	for i := range maxes {
 		c = maxes[i] * c
