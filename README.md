@@ -3,7 +3,7 @@ Aims to reproduce wfuzz's functionality and versatility and combine it with go's
 build:
 `go build`
 
-build for windows:
+build for windows: use --no-color option
 `GOOS=windows GOARCH=amd64 go build -o gofuzz.exe`
 
 most basic usage:
@@ -38,4 +38,3 @@ Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?u
 
 foreign lib: 
 `github.com/fatih/color`
-(note: development on this library is halted.)
