@@ -25,6 +25,14 @@ func convPrintFilter(s *State, filternum string) {
 	}
 }
 
+func parseurl(uarg string) string {
+	u, err := url.Parse(uarg)
+	if err != nil {
+		panic(err)
+	}
+	return u.Host + u.Path
+}
+
 func (s *State) readfile(fname string) error {
 	fn, err := os.Open(fname)
 	if err != nil {

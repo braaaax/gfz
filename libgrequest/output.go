@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -12,14 +11,6 @@ import (
 
 	"github.com/fatih/color"
 )
-
-func parseurl(arg string) string {
-	u, err := url.Parse(arg)
-	if err != nil {
-		panic(err)
-	}
-	return u.Path
-}
 
 func res2string(arg int64) string {
 	return strconv.FormatInt(arg, 10)
@@ -157,7 +148,7 @@ func PrintColorFn(s *State, r *Result) {
 	// write output line
 	code := res2string(r.Code)
 	output := ""
-	output += fmt.Sprintf("%-20s", parseurl(r.URL))[1:] // clip the leading '/'
+	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // clip the leading '/'
 	if !s.NoStatus {
 		if strings.HasPrefix(code, "2") {
 			code = green(code)
