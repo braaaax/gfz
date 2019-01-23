@@ -25,9 +25,12 @@ func convPrintFilter(s *State, filternum string) {
 	}
 }
 
-func (s *State) readfile(fname string) {
+func (s *State) readfile(fname string) error {
 	fn, err := os.Open(fname)
-	check(err)
+	if err != nil {
+		fmt.Println("File not found.")
+		return err
+	}
 	defer fn.Close()
 	var lines []string
 	scanner := bufio.NewScanner(fn)
@@ -35,6 +38,7 @@ func (s *State) readfile(fname string) {
 		lines = append(lines, scanner.Text())
 	}
 	s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, lines)
+	return nil
 }
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
@@ -55,7 +59,7 @@ func ParseWordlistArgs(str string, s *State) bool {
 
 	for N := 0; N < len(match); N++ {
 		if zfile.MatchString(match[N]) {
-			s.readfile(match[N][len("-z file,"):])
+			if s.readfile(match[N][len("-z file,"):]) != nil {return false}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-z file,"):])
 		}
 		if zrange.MatchString(match[N]) {
@@ -79,7 +83,7 @@ func ParseWordlistArgs(str string, s *State) bool {
 			}
 		}
 		if wfile.MatchString(match[N]) {
-			s.readfile(match[N][len("-w "):])
+			if s.readfile(match[N][len("-w "):]) != nil {return false}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-w "):])
 		}
 		// after payload for loop

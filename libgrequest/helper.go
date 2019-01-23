@@ -16,7 +16,8 @@ import (
 
 func check(e error) {
 	if e != nil {
-		panic("file not found!")
+		fmt.Println("File not found.")
+		// panic("file not found!")
 	}
 }
 
@@ -147,19 +148,20 @@ func PrintHelp() {
 	fmt.Printf("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.\n\n")
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help.")
+	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
+	fmt.Println("-z file/range/list,PAYLOAD    : Where PAYLOAD is FILENAME or 1-10 or \"-\" separated sequence.")
+	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.")
+	fmt.Println("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
-	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
-	fmt.Println("--no-color                    : Monotone output.")
-	fmt.Println("-k                            : Strict TLS connections.")
-	fmt.Println("-q                            : Quiet mode.")
 	fmt.Println("-p URL                        : Specify proxy URL.")
 	fmt.Println("-b COOKIE                     : Specify cookie.")
 	fmt.Println("-ua USERAGENT                 : Specify user agent.")
 	fmt.Println("--password PASSWORD           : Specify password for basic web auth.")
 	fmt.Println("--username USERNAME           : Specify username.")
-	fmt.Println("-w wordlist                   : Specify a wordlist file (alias for -z file,wordlist).")
-	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.")
-	fmt.Println("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.")
+	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
+	fmt.Println("--no-color                    : Monotone output.")
+	fmt.Println("-k                            : Strict TLS connections (skip verify = false).")
+	fmt.Println("-q                            : Quiet mode.")
 	fmt.Printf("\n")
 	fmt.Println("Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 	fmt.Println("          gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z")
