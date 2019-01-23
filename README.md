@@ -12,6 +12,7 @@ most basic usage:
 
 `gofuzz -w wordlist1 -w wordlist2 http://someip/FUZZFUZ2Z`
 
+
 ```
 Usage:   gofuzz [options] -w wordlist <url>
 Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.
