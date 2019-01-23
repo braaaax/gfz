@@ -12,15 +12,6 @@ import (
 	"github.com/fatih/color"
 )
 
-// helper functions
-
-func check(e error) {
-	if e != nil {
-		fmt.Println("File not found.")
-		// panic("file not found!")
-	}
-}
-
 // IntSet : Set value maps int64 to bool.
 type IntSet struct {
 	Set map[int64]bool
