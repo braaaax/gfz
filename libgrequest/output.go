@@ -4,6 +4,7 @@ import (
 	"fmt"
 	// "io/ioutil"
 	// "net/http"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -12,6 +13,75 @@ import (
 	"github.com/fatih/color"
 )
 
+func parseurl(uarg string) string {
+	u, err := url.Parse(uarg)
+	if err != nil {
+		panic(err)
+	}
+	return u.Host + u.Path
+}
+
+// PrintChars :
+// probably a better way to do this
+func PrintChars(s *State, r *Result) {
+	if s.Filter.Contains(r.Chars) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// PrintWords :
+func PrintWords(s *State, r *Result) {
+	if s.Filter.Contains(r.Words) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// PrintStatus :
+func PrintStatus(s *State, r *Result) {
+	if s.Filter.Contains(r.Code) == s.Show { // issue nil
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// PrintLines :
+func PrintLines(s *State, r *Result) {
+	if s.Filter.Contains(r.Lines) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// ParsePrintFilterArgs :
+func ParsePrintFilterArgs(s *State, fs string) {
+	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
+	if string(m[0]) == "s" {
+		s.Show = true
+	} else {
+		s.Show = false
+	}
+	switch m[1:] {
+	case "c":
+		s.Printer = PrintStatus
+	case "l":
+		s.Printer = PrintLines
+	case "w":
+		s.Printer = PrintWords
+	case "h":
+		s.Printer = PrintChars
+	}
+}
+
 // WriteToFile :
 func WriteToFile(output string, s *State) {
 	_, err := s.OutputFile.WriteString(output)
@@ -19,8 +89,6 @@ func WriteToFile(output string, s *State) {
 		panic("[!] Unable to write to file " + s.OutputFileName)
 	}
 }
-
-
 
 // PrintNoColorFn : print page into to stdout
 func PrintNoColorFn(s *State, r *Result) {
@@ -36,6 +104,11 @@ func PrintNoColorFn(s *State, r *Result) {
 		output += fmt.Sprintf(" Lines=%-6.8s", res2string(r.Lines))
 	}
 	output += "\n"
+	if s.PrintBody == true {
+		output += "\n"
+		output += string(r.Body)
+		output += "\n"
+	}
 	if s.OutputFile != nil {
 		WriteToFile(output, s)
 	}
@@ -84,10 +157,16 @@ func PrintColorFn(s *State, r *Result) {
 	// print result struct data
 	if r.Chars >= int64(0) {
 		output += fmt.Sprintf("%s%s%-6.8s", " Chars", "=", res2string(r.Chars)) // note to self: color for result int64s add about 10 spaces
-		output += fmt.Sprintf("%s%s%-6.8s", " Words", "=", res2string(r.Words))
-		output += fmt.Sprintf("%s%s%-6.8s", " Lines", "=", res2string(r.Lines))
+		output += fmt.Sprintf("%s%s%-5.5s", " Words", "=", res2string(r.Words))
+		output += fmt.Sprintf("%s%s%-5.5s", " Lines", "=", res2string(r.Lines))
 	}
 	output += "\n"
+
+	if s.PrintBody == true {
+		output += "\n"
+		output += yellow(string(r.Body))
+		output += "\n"
+	}
 
 	if s.OutputFile != nil {
 		WriteToFile(output, s)

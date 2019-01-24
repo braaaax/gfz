@@ -2,108 +2,14 @@ package libgrequest
 
 import (
 	"crypto/tls"
-	"io/ioutil"
+	// "io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode/utf8"
+	// "unicode/utf8"
 )
-
-// ParseResponse : process http response pointer
-func ParseResponse(fullURL string, resp *http.Response) (*Result, error) {
-	//set body
-	var r = &Result{URL: fullURL, Code: int64(resp.StatusCode)}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return r, err
-	}
-	r.Body = body
-	sbody := string(body)
-	if err == nil {
-		r.Chars = int64(utf8.RuneCountInString(sbody))
-		r.Words = int64(len(strings.Fields(sbody)))
-		newlineRE := regexp.MustCompile("\n")
-		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
-	} else {
-		return r, err
-	}
-	return r, nil
-}
-
-func parseurl(uarg string) string {
-	u, err := url.Parse(uarg)
-	if err != nil {
-		panic(err)
-	}
-	return u.Host + u.Path
-}
-
-// PrintChars :
-// probably a better way to do this
-func PrintChars(s *State, r *Result) {
-	if s.Filter.Contains(r.Chars) == s.Show {
-		if s.NoColor {
-			PrintNoColorFn(s, r)
-		}
-		PrintColorFn(s, r)
-	}
-}
-
-// PrintWords :
-func PrintWords(s *State, r *Result) {
-	if s.Filter.Contains(r.Words) == s.Show {
-		if s.NoColor {
-			PrintNoColorFn(s, r)
-		}
-		PrintColorFn(s, r)
-	}
-}
-
-// PrintStatus :
-func PrintStatus(s *State, r *Result) {
-	if s.Filter.Contains(r.Code) == s.Show { // issue nil
-		if s.NoColor {
-			PrintNoColorFn(s, r)
-		}
-		PrintColorFn(s, r)
-	}
-}
-
-// PrintLines :
-func PrintLines(s *State, r *Result) {
-	if s.Filter.Contains(r.Lines) == s.Show {
-		if s.NoColor {
-			PrintNoColorFn(s, r)
-		}
-		PrintColorFn(s, r)
-	}
-}
-
-// ParsePrintFilterArgs :
-func ParsePrintFilterArgs(s *State, fs string) {
-	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
-	if string(m[0]) == "s" {
-		s.Show = true
-	} else {
-		s.Show = false
-	}
-	switch m[1:] {
-	case "c":
-		s.Printer = PrintStatus
-	case "l":
-		s.Printer = PrintLines
-	case "w":
-		s.Printer = PrintWords
-	case "h":
-		s.Printer = PrintChars
-	}
-}
-
-
-
-
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {

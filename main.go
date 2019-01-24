@@ -24,6 +24,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Username = libgrequest.ArgString(str, "--username.[a-zA-Z0-9=/?]*")
 	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
 	s.NoColor = libgrequest.ArgBool(str, "--no-color")
+	s.PrintBody = libgrequest.ArgBool(str, "--print-body")
 
 	// s.Recursive = libgrequest.ArgBool(str, "-r")
 	// s.Mode = libgrequest.ArgString(str, "-m")

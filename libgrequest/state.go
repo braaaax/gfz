@@ -7,6 +7,10 @@ import (
 	"sync"
 	"bufio"
 	"fmt"
+	"unicode/utf8"
+	"io/ioutil"
+	"regexp"
+	"strings"
 )
 
 // MethodProc :
@@ -48,6 +52,7 @@ type State struct {
 	SignalChan     chan os.Signal
 	WordListFiles  []string
 	Quiet          bool
+	PrintBody      bool
 	Recursive      bool
 	Terminate      bool
 	Threads        int
@@ -86,6 +91,25 @@ func InitState() *State {
 	}
 }
 
+// SafeCounter is safe to use concurrently.
+type SafeCounter struct {
+	v   int
+	mux sync.Mutex
+}
+
+// Inc : Increment v.
+func (c *SafeCounter) Inc() {
+	c.mux.Lock()
+	// Lock so only one goroutine at a time can access the count
+	c.v++
+	c.mux.Unlock()
+}
+
+// InitSafeCounter : Return intialized SafeCounter struct pointer.
+func InitSafeCounter() *SafeCounter {
+	return &SafeCounter{v: 0, mux: sync.Mutex{}}
+}
+
 // Fuzz : struct to store info for GetUrl
 type Fuzz struct {
 	Wordlists [][]string
@@ -109,23 +133,26 @@ type Result struct {
 	Code  int64
 }
 
-// SafeCounter is safe to use concurrently.
-type SafeCounter struct {
-	v   int
-	mux sync.Mutex
-}
+// InitResult : process http response pointer
+func InitResult(fullURL string, resp *http.Response) (*Result, error) {
+	//set body
+	var r = &Result{URL: fullURL, Code: int64(resp.StatusCode)}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return r, err
+	}
+	r.Body = body
+	sbody := string(body)
 
-// Inc : Increment v.
-func (c *SafeCounter) Inc() {
-	c.mux.Lock()
-	// Lock so only one goroutine at a time can access the count
-	c.v++
-	c.mux.Unlock()
-}
-
-// InitSafeCounter : Return intialized SafeCounter struct pointer.
-func InitSafeCounter() *SafeCounter {
-	return &SafeCounter{v: 0, mux: sync.Mutex{}}
+	if err == nil {
+		r.Chars = int64(utf8.RuneCountInString(sbody))
+		r.Words = int64(len(strings.Fields(sbody)))
+		newlineRE := regexp.MustCompile("\n")
+		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
+	} else {
+		return r, err
+	}
+	return r, nil
 }
 
 // IntSet : Set value maps int64 to bool.
