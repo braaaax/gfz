@@ -25,7 +25,7 @@ func WriteToFile(output string, s *State) {
 // PrintNoColorFn : print page into to stdout
 func PrintNoColorFn(s *State, r *Result) {
 	output := ""
-	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // to do: just the uri
+	output += fmt.Sprintf("%-30s", parseurl(r.URL)) // to do: just the uri
 	if !s.NoStatus {
 		code := strconv.FormatInt(r.Code, 10)
 		output += fmt.Sprintf(" Status: %-10s", code)
@@ -64,7 +64,7 @@ func PrintColorFn(s *State, r *Result) {
 	// write output line
 	code := res2string(r.Code)
 	output := ""
-	output += fmt.Sprintf("%-20s", parseurl(r.URL)) // clip the leading '/'
+	output += fmt.Sprintf("%-30s", parseurl(r.URL)) // clip the leading '/'
 	if !s.NoStatus {
 		if strings.HasPrefix(code, "2") {
 			code = green(code)
