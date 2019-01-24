@@ -1,28 +1,35 @@
 package libgrequest
 
 import (
-	"bufio"
 	"crypto/tls"
-	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
-// convPrintFilter :
-func convPrintFilter(s *State, filternum string) {
-	for _, c := range strings.Split(filternum, ",") {
-		i, err := strconv.Atoi(c)
-		i64 := int64(i)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			s.Filter.Add(i64)
-		}
+// ParseResponse : process http response pointer
+func ParseResponse(fullURL string, resp *http.Response) (*Result, error) {
+	//set body
+	var r = &Result{URL: fullURL, Code: int64(resp.StatusCode)}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return r, err
 	}
+	r.Body = body
+	sbody := string(body)
+	if err == nil {
+		r.Chars = int64(utf8.RuneCountInString(sbody))
+		r.Words = int64(len(strings.Fields(sbody)))
+		newlineRE := regexp.MustCompile("\n")
+		r.Lines = int64(len(newlineRE.FindAllString(sbody, -1)))
+	} else {
+		return r, err
+	}
+	return r, nil
 }
 
 func parseurl(uarg string) string {
@@ -33,21 +40,70 @@ func parseurl(uarg string) string {
 	return u.Host + u.Path
 }
 
-func (s *State) readfile(fname string) error {
-	fn, err := os.Open(fname)
-	if err != nil {
-		fmt.Println("File not found.")
-		return err
+// PrintChars :
+// probably a better way to do this
+func PrintChars(s *State, r *Result) {
+	if s.Filter.Contains(r.Chars) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
 	}
-	defer fn.Close()
-	var lines []string
-	scanner := bufio.NewScanner(fn)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, lines)
-	return nil
 }
+
+// PrintWords :
+func PrintWords(s *State, r *Result) {
+	if s.Filter.Contains(r.Words) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// PrintStatus :
+func PrintStatus(s *State, r *Result) {
+	if s.Filter.Contains(r.Code) == s.Show { // issue nil
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// PrintLines :
+func PrintLines(s *State, r *Result) {
+	if s.Filter.Contains(r.Lines) == s.Show {
+		if s.NoColor {
+			PrintNoColorFn(s, r)
+		}
+		PrintColorFn(s, r)
+	}
+}
+
+// ParsePrintFilterArgs :
+func ParsePrintFilterArgs(s *State, fs string) {
+	m := regexp.MustCompile("(sl|sc|sw|sh|hc|hl|hh|hw)").FindString(fs)
+	if string(m[0]) == "s" {
+		s.Show = true
+	} else {
+		s.Show = false
+	}
+	switch m[1:] {
+	case "c":
+		s.Printer = PrintStatus
+	case "l":
+		s.Printer = PrintLines
+	case "w":
+		s.Printer = PrintWords
+	case "h":
+		s.Printer = PrintChars
+	}
+}
+
+
+
+
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {
@@ -67,7 +123,9 @@ func ParseWordlistArgs(str string, s *State) bool {
 
 	for N := 0; N < len(match); N++ {
 		if zfile.MatchString(match[N]) {
-			if s.readfile(match[N][len("-z file,"):]) != nil {return false}
+			if s.readfile(match[N][len("-z file,"):]) != nil {
+				return false
+			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-z file,"):])
 		}
 		if zrange.MatchString(match[N]) {
@@ -91,7 +149,9 @@ func ParseWordlistArgs(str string, s *State) bool {
 			}
 		}
 		if wfile.MatchString(match[N]) {
-			if s.readfile(match[N][len("-w "):]) != nil {return false}
+			if s.readfile(match[N][len("-w "):]) != nil {
+				return false
+			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-w "):])
 		}
 		// after payload for loop
@@ -159,7 +219,7 @@ func Validate(s *State, argstr, proxy string) bool {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-	
+
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

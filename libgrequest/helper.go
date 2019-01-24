@@ -12,41 +12,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// IntSet : Set value maps int64 to bool.
-type IntSet struct {
-	Set map[int64]bool
-}
 
-// StringSet : Set value maps string to bool.
-type StringSet struct {
-	Set map[string]bool
-}
-
-// Contains : Contains int.
-func (set *IntSet) Contains(i int64) bool {
-	_, found := set.Set[i]
-	return found
-}
-
-// Add : Add int.
-func (set *IntSet) Add(i int64) bool {
-	_, found := set.Set[i]
-	set.Set[i] = true
-	return !found
-}
-
-// Contains : Contains string.
-func (set *StringSet) Contains(s string) bool {
-	_, found := set.Set[s]
-	return found
-}
-
-// Add : Add string.
-func (set *StringSet) Add(s string) bool {
-	_, found := set.Set[s]
-	set.Set[s] = true
-	return !found
-}
 
 // ArgBool : Turn commandline pat into true or false
 func ArgBool(s, p string) bool {
@@ -103,6 +69,23 @@ func PrepareSignalHandler(s *State) {
 func int2string(i int) string {
 	t := strconv.Itoa(i)
 	return t
+}
+
+func res2string(arg int64) string {
+	return strconv.FormatInt(arg, 10)
+}
+
+// convPrintFilter :
+func convPrintFilter(s *State, filternum string) {
+	for _, c := range strings.Split(filternum, ",") {
+		i, err := strconv.Atoi(c)
+		i64 := int64(i)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			s.Filter.Add(i64)
+		}
+	}
 }
 
 func TotalRequests(maxes []int) int {

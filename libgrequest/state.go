@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"os"
 	"sync"
+	"bufio"
+	"fmt"
 )
 
 // MethodProc :
@@ -52,6 +54,22 @@ type State struct {
 	Counter        *SafeCounter
 	FUZZs          []string
 	Fuzzer         *Fuzz
+}
+
+func (s *State) readfile(fname string) error {
+	fn, err := os.Open(fname)
+	if err != nil {
+		fmt.Println("File not found.")
+		return err
+	}
+	defer fn.Close()
+	var lines []string
+	scanner := bufio.NewScanner(fn)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, lines)
+	return nil
 }
 
 // InitState :
@@ -108,4 +126,40 @@ func (c *SafeCounter) Inc() {
 // InitSafeCounter : Return intialized SafeCounter struct pointer.
 func InitSafeCounter() *SafeCounter {
 	return &SafeCounter{v: 0, mux: sync.Mutex{}}
+}
+
+// IntSet : Set value maps int64 to bool.
+type IntSet struct {
+	Set map[int64]bool
+}
+
+// StringSet : Set value maps string to bool.
+type StringSet struct {
+	Set map[string]bool
+}
+
+// Contains : Contains int.
+func (set *IntSet) Contains(i int64) bool {
+	_, found := set.Set[i]
+	return found
+}
+
+// Add : Add int.
+func (set *IntSet) Add(i int64) bool {
+	_, found := set.Set[i]
+	set.Set[i] = true
+	return !found
+}
+
+// Contains : Contains string.
+func (set *StringSet) Contains(s string) bool {
+	_, found := set.Set[s]
+	return found
+}
+
+// Add : Add string.
+func (set *StringSet) Add(s string) bool {
+	_, found := set.Set[s]
+	set.Set[s] = true
+	return !found
 }
