@@ -12,8 +12,6 @@ import (
 	"github.com/fatih/color"
 )
 
-
-
 // ArgBool : Turn commandline pat into true or false
 func ArgBool(s, p string) bool {
 	re := regexp.MustCompile(p)
@@ -87,6 +85,13 @@ func convPrintFilter(s *State, filternum string) {
 		}
 	}
 }
+func mustOpen(f string) *os.File {
+	r, err := os.Open(f)
+	if err != nil {
+		panic(err)
+	}
+	return r
+}
 
 func TotalRequests(maxes []int) int {
 	c := 1
@@ -134,6 +139,7 @@ func PrintHelp() {
 	fmt.Println("--username USERNAME           : Specify username.")
 	fmt.Println("--no-follow                   : Don't follow HTTP redirections.")
 	fmt.Println("--no-color                    : Monotone output.")
+	fmt.Println("--print-body                  : Print response body to stdout.")
 	fmt.Println("-k                            : Strict TLS connections (skip verify = false).")
 	fmt.Println("-q                            : Quiet mode.")
 	fmt.Printf("\n")

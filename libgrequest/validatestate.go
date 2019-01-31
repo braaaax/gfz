@@ -11,6 +11,40 @@ import (
 	// "unicode/utf8"
 )
 
+func (s *State) setPayload(str string) {
+	var patpostform = "--post-form [a-zA-Z0-9-=,]*"
+	var patmultpart = "--post-multipart [a-zA-Z0-9-.]*"
+	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
+	postform := regexp.MustCompile(patpostform)
+	multpartform := regexp.MustCompile(patmultpart)
+	
+	if postform.MatchString(str) {
+		postformstr := postform.FindString(str)[len("--post-form "):]
+		if len(postformstr) > 0 {
+			if FUZZre.MatchString(postformstr){
+				s.Post = true
+				s.PostForm = true
+				s.Payload = postformstr
+			}
+		}
+		return
+	}
+	if multpartform.MatchString(str) {
+		f := mustOpen(multpartform.FindString(str)[len("--post-multipart "):])
+		b := []byte{}
+		somebytes, _ := f.Read(b)
+		s.Payload = string(somebytes)
+		if len(s.Payload) > 0 {
+			if FUZZre.MatchString(s.Payload){
+				s.Post = true
+				s.PostMulti = true
+			}
+		}
+		defer f.Close()
+		return
+	}
+}
+
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {
 	var patzfile = "-z (file|File|FILE),[/a-zA-A0-9.-_]*"
@@ -78,7 +112,12 @@ func ParseWordlistArgs(str string, s *State) bool {
 	for _, i := range s.Fuzzer.Wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
-	return true
+	if len(s.Fuzzer.Wordlists) != 0 {
+		return true
+	} else {
+		return false
+	}
+	//return true
 }
 
 // Validate : final input error checks before run.
@@ -125,7 +164,7 @@ func Validate(s *State, argstr, proxy string) bool {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-
+	s.setPayload(argstr)
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

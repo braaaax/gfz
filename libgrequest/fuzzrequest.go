@@ -1,9 +1,13 @@
 package libgrequest
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
@@ -39,9 +43,71 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 	return resp, err
 }
 
-// MakeRequest : make http request
-func MakeRequest(s *State, fullURL, cookie string) (*int, error) {
-	req, err := http.NewRequest("GET", fullURL, nil)
+func getFUZZreq(s *State, u string) (*http.Request, error) {
+	if s.Post {
+		if s.PostForm {
+			// TODO: configer payload string
+			v := url.Values{}
+			pairs := strings.Split(s.Payload, ",")
+			for i := range pairs {
+				kv := strings.Split(pairs[i], "=")
+				if len(kv) == 2 {
+					v.Set(kv[0], kv[1])
+				}
+			}
+			encv := v.Encode()
+			req, err := http.NewRequest("POST", u, strings.NewReader(encv))
+			if err != nil {
+				return nil, nil
+			}
+			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			return req, err
+		}
+		if s.PostMulti {
+			var err error
+			values := map[string]io.Reader{
+				// "file":  mustOpen("main.go"), // lets assume its this file
+				"other": strings.NewReader(s.Payload),
+			}
+			var b bytes.Buffer
+			multipartw := multipart.NewWriter(&b)
+			for key, rdr := range values {
+				var fwtr io.Writer
+				if f, ok := rdr.(io.Closer); ok {
+					defer f.Close()
+				}
+				if f, ok := rdr.(*os.File); ok {
+					if fwtr, _ = multipartw.CreateFormFile(key, f.Name()); err != nil {
+						return nil, nil
+					}
+				} else {
+					if fwtr, err = multipartw.CreateFormField(key); err != nil {
+						return nil, nil
+					}
+				}
+				if _, err = io.Copy(fwtr, rdr); err != nil {
+					return nil, err
+				}
+			}
+			multipartw.Close()
+			req, err := http.NewRequest("POST", u, &b)
+			if err != nil {
+				return nil, nil
+			}
+			req.Header.Add("Content-Type", multipartw.FormDataContentType())
+			return req, err
+		}
+	}
+	req, err := http.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil
+	}
+	return req, err
+}
+
+// makeRequest : make http request
+func makeRequest(s *State, fullURL, cookie string) (*int, error) {
+	req, err := getFUZZreq(s, fullURL)
 	if err != nil {
 		return nil, nil
 	}
@@ -78,5 +144,5 @@ func MakeRequest(s *State, fullURL, cookie string) (*int, error) {
 
 // GoGet : returs address of response statuscode and error
 func GoGet(s *State, url, cookie string) (*int, error) {
-	return MakeRequest(s, url, cookie)
+	return makeRequest(s, url, cookie)
 }

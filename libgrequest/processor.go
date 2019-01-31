@@ -9,12 +9,11 @@ import (
 
 // Processor : channel controlcenter
 func Processor(s *State) {
-	// PrepareSignalHandler(s)
 	N := TotalRequests(s.Fuzzer.Maxes)
 	urlc := make(chan string)
 	errorc := make(chan error, s.Threads)
 
-	go func() { GetURL(s, 0, s.URL, urlc) }()
+	go func() { GetURL(s, 0, s.URL, urlc) }() // Payload is just a string with 'FUZZ'
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
@@ -29,7 +28,6 @@ func Processor(s *State) {
 	}
 	for r := 0; r < N; r++ {
 		<-errorc
-		// <-s.SignalChan
 		fmt.Printf("[+] requests: %d/%d\r", s.Counter.v, N)
 	}
 }

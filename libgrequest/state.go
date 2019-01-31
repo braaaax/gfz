@@ -1,16 +1,16 @@
 package libgrequest
 
 import (
+	"bufio"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
-	"sync"
-	"bufio"
-	"fmt"
-	"unicode/utf8"
-	"io/ioutil"
 	"regexp"
 	"strings"
+	"sync"
+	"unicode/utf8"
 )
 
 // MethodProc :
@@ -42,8 +42,10 @@ type State struct {
 	OutputFile     *os.File
 	OutputFileName string
 	InsecureSSL    bool
-	Mode           string
 	Payload        string
+	Post           bool
+	PostForm       bool
+	PostMulti      bool
 	Processor      ProcFunc
 	WildcardIps    StringSet
 	Show           bool
@@ -53,7 +55,6 @@ type State struct {
 	WordListFiles  []string
 	Quiet          bool
 	PrintBody      bool
-	Recursive      bool
 	Terminate      bool
 	Threads        int
 	Counter        *SafeCounter
@@ -88,8 +89,13 @@ func InitState() *State {
 		IncludeLength:  false,
 		WildcardForced: false,
 		UseSlash:       false,
+		Post:           false,
+		PostForm:       false,
+		PostMulti:      false,
+		Payload:        "",
 	}
 }
+
 
 // SafeCounter is safe to use concurrently.
 type SafeCounter struct {
@@ -115,7 +121,6 @@ type Fuzz struct {
 	Wordlists [][]string
 	Indexes   []int
 	Maxes     []int
-	//Fuzzmap   map[string]string
 }
 
 // InitFuzz : init the Fuzz struct.

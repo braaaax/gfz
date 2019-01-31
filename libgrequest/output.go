@@ -2,13 +2,10 @@ package libgrequest
 
 import (
 	"fmt"
-	// "io/ioutil"
-	// "net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
-	// "unicode/utf8"
 
 	"github.com/fatih/color"
 )
