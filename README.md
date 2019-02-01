@@ -1,5 +1,8 @@
 Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 
+get:
+`go get github.com/braaaax/gofuzz`
+
 build:
 
 `go build`
@@ -36,7 +39,7 @@ Options:
 
 Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
           gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z
-          gofuzz -t 32 -k --follow -w somelist.txt https://someTLSsite.com/FUZZ
+          gofuzz -t 32 -k -w somelist.txt https://someTLSsite.com/FUZZ
 ```
 
 foreign lib: 
