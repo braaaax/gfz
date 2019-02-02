@@ -17,7 +17,7 @@ most basic usage:
 
 
 ```
-Usage:   gofuzz [options] -w wordlist <url>
+Usage:   gofuzz [options] <url>
 Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.
 
 Options:
