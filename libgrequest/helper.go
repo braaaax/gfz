@@ -123,7 +123,7 @@ func PrintTopNoColor(s *State) {
 func PrintHelp() {
 	fmt.Printf("\n[+] gofuzz: dirty fork of gobuster to reproduce the functionality of wfuzz\n")
 	fmt.Printf("[+] Author: brax (https://github.com/braaaax/gofuzz)\n")
-	fmt.Printf("\nUsage:   gofuzz [options] -w wordlist <url>\n")
+	fmt.Printf("\nUsage:   gofuzz [options] <url>\n")
 	fmt.Printf("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.\n\n")
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help.")
