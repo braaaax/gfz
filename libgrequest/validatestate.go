@@ -47,7 +47,7 @@ func (s *State) setPayload(str string) {
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {
-	var patzfile = "-z (file|File|FILE),[/a-zA-Z0-9.-_]*"
+	var patzfile = "-z (file|File|FILE),[/0-9a-zA-Z._-]*"
 	var patzrange = "-z (range|Range|RANGE),[0-9-]*" // put a limit
 	var patzlist = "-z (list|List|LIST),[a-zA-Z0-9.-]*"
 	var patwfile = "-w [/0-9a-zA-Z._-]*"
@@ -57,16 +57,17 @@ func ParseWordlistArgs(str string, s *State) bool {
 	zrange := regexp.MustCompile(patzrange)
 	wfile := regexp.MustCompile(patwfile)
 	zlist := regexp.MustCompile(patzlist)
-	var payloadpat = "(-z file,[/a-zA-A0-9.-_]*|-z File,[/a-zA-A0-9.-_]*|-z FILE,[/a-zA-A0-9.-_]*|-z list,[a-zA-Z0-9.-]*|-z List,[a-zA-Z0-9.-]*|-z LIST,[a-zA-Z0-9.-]*|-z range,[0-9-]*|-z Range,[0-9-]*|-z RANGE,[0-9-]*|-w [/0-9a-zA-Z._-]*)"
+	var payloadpat = "(-z file,[/0-9a-zA-Z._-]*|-z File,[/a-zA-A0-9.-_]*|-z FILE,[/a-zA-A0-9.-_]*|-z list,[a-zA-Z0-9.-]*|-z List,[a-zA-Z0-9.-]*|-z LIST,[a-zA-Z0-9.-]*|-z range,[0-9-]*|-z Range,[0-9-]*|-z RANGE,[0-9-]*|-w [/0-9a-zA-Z._-]*)"
 	payload := regexp.MustCompile(payloadpat)
 	match := payload.FindAllString(str, -1)
-
+	// fmt.Println("match:", zfile.FindAllString(str, -1))
 	for N := 0; N < len(match); N++ {
 		if zfile.MatchString(match[N]) {
 			if s.readfile(match[N][len("-z file,"):]) != nil {
 				return false
 			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-z file,"):])
+
 		}
 		if zrange.MatchString(match[N]) {
 			numRE := regexp.MustCompile("[0-9]+")
