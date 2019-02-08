@@ -145,5 +145,5 @@ func PrintHelp() {
 	fmt.Printf("\n")
 	fmt.Println("Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 	fmt.Println("          gofuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z")
-	fmt.Println("          gofuzz -t 32 -k -w somelist.txt https://someTLSsite.com/FUZZ")
+	fmt.Println("          gofuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ")
 }
