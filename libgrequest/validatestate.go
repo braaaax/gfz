@@ -17,11 +17,11 @@ func (s *State) setPayload(str string) {
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
 	postform := regexp.MustCompile(patpostform)
 	multpartform := regexp.MustCompile(patmultpart)
-	
+
 	if postform.MatchString(str) {
 		postformstr := postform.FindString(str)[len("--post-form "):]
 		if len(postformstr) > 0 {
-			if FUZZre.MatchString(postformstr){
+			if FUZZre.MatchString(postformstr) {
 				s.Post = true
 				s.PostForm = true
 				s.Payload = postformstr
@@ -35,7 +35,7 @@ func (s *State) setPayload(str string) {
 		somebytes, _ := f.Read(b)
 		s.Payload = string(somebytes)
 		if len(s.Payload) > 0 {
-			if FUZZre.MatchString(s.Payload){
+			if FUZZre.MatchString(s.Payload) {
 				s.Post = true
 				s.PostMulti = true
 			}
@@ -47,7 +47,7 @@ func (s *State) setPayload(str string) {
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {
-	var patzfile = "-z (file|File|FILE),[/a-zA-A0-9.-_]*"
+	var patzfile = "-z (file|File|FILE),[/a-zA-Z0-9.-_]*"
 	var patzrange = "-z (range|Range|RANGE),[0-9-]*" // put a limit
 	var patzlist = "-z (list|List|LIST),[a-zA-Z0-9.-]*"
 	var patwfile = "-w [/0-9a-zA-Z._-]*"
