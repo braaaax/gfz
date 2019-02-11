@@ -73,10 +73,11 @@ func (s *State) readfile(fname string) error {
 	scanner := bufio.NewScanner(fn)
 	for scanner.Scan() {
 		w := scanner.Text()
-		filt := regexp.MustCompile("[!@#%]")
-		if !filt.MatchString(w){
-			lines = append(lines, w)
-		}
+		lines = append(lines, w)
+		//filt := regexp.MustCompile("[!@#%]")
+		//if !filt.MatchString(w){
+		//	lines = append(lines, w)
+		//}
 		// fmt.Println(w)
 	}
 	s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, lines)
