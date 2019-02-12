@@ -102,6 +102,7 @@ func getFUZZreq(s *State, u string) (*http.Request, error) {
 	if err != nil {
 		return nil, nil
 	}
+	s.Counter.Inc()
 	return req, err
 }
 
