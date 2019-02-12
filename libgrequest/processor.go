@@ -18,10 +18,6 @@ func Processor(s *State) {
 				// if s.Terminate == true {break}
 				code, _ := GoGet(s, <-urlc, s.Cookies)
 				codec<-code
-				// if code != nil {
-				//	codec <- code
-				//	s.Counter.Inc()
-				//}
 			}
 		}()
 	}

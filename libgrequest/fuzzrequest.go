@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// the below functions are heavilly influenced by OJ's code in gobuster
 // RedirectHandler :
 type RedirectHandler struct {
 	Transport http.RoundTripper

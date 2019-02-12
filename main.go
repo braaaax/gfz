@@ -4,6 +4,8 @@ package main
 import (
 	"os"
 	"strings"
+	"time"
+	"fmt"
 
 	"github.com/braaaax/gofuzz/libgrequest"
 )
@@ -25,7 +27,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
 	s.NoColor = libgrequest.ArgBool(str, "--no-color")
 	s.PrintBody = libgrequest.ArgBool(str, "--print-body")
-
 	// s.Recursive = libgrequest.ArgBool(str, "-r")
 	s.PostForm = libgrequest.ArgBool(str, "--post-form")
 	s.PostMulti = libgrequest.ArgBool(str, "--post-multipart")
@@ -42,16 +43,19 @@ func ParseCmdLine(str string) *libgrequest.State {
 }
 
 func main() {
+	// start := time.Now()
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
 	if s != nil && len(os.Args) > 1 {
-		
 		if s.NoColor {
 			libgrequest.PrintTopNoColor(s)
 		} else {
 			libgrequest.PrintTopColor(s)
 		}
+		start := time.Now()
 		libgrequest.Processor(s)
+		elapsed := time.Since(start)
+		fmt.Printf("\nRequests took: %s\n", elapsed)
 	} else {
 		libgrequest.PrintHelp()
 	}
