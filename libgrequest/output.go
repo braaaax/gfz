@@ -90,16 +90,16 @@ func WriteToFile(output string, s *State) {
 // PrintNoColorFn : print page into to stdout
 func PrintNoColorFn(s *State, r *Result) {
 	output := ""
-	output += fmt.Sprintf("%d", s.Counter.v)
-	// output += fmt.Sprintf("%-30s", parseurl(r.URL)) // to do: just the uri
+	//output += fmt.Sprintf("%d", s.Counter.v)
+
 	if !s.NoStatus {
 		code := strconv.FormatInt(r.Code, 10)
-		output += fmt.Sprintf(" Status: %-10s", code)
+		output += fmt.Sprintf(" Code %-10s ", code)
 	}
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf(" Chars=%-6.8s", res2string(r.Chars))
-		output += fmt.Sprintf(" Words=%-6.8s", res2string(r.Words))
-		output += fmt.Sprintf(" Lines=%-6.8s", res2string(r.Lines))
+		output += fmt.Sprintf(" C %-6.8s", res2string(r.Chars))
+		output += fmt.Sprintf(" W %-6.8s", res2string(r.Words))
+		output += fmt.Sprintf(" L %-6.8s", res2string(r.Lines))
 	}
 	output += fmt.Sprintf("%-30s", parseurl(r.URL))
 	output += "\n"
@@ -137,7 +137,7 @@ func PrintColorFn(s *State, r *Result) {
 	code := res2string(r.Code)
 	output := ""
 	// output += fmt.Sprintf("%d. ", s.Counter.v)
-	// output += fmt.Sprintf("%-30s", parseurl(r.URL)) // clip the leading '/'
+
 	if !s.NoStatus {
 		if strings.HasPrefix(code, "2") {
 			code = green(code)
@@ -151,14 +151,14 @@ func PrintColorFn(s *State, r *Result) {
 		if strings.HasPrefix(code, "5") {
 			code = cyan(code)
 		}
-		output += fmt.Sprintf(" Status %-10s", code)
+		output += fmt.Sprintf(" Code %-10s ", code)
 	}
 
 	// print result struct data
 	if r.Chars >= int64(0) {
-		output += fmt.Sprintf("%s%s%-6.8s", " Chars", "=", res2string(r.Chars)) // note to self: color for result int64s add about 10 spaces
-		output += fmt.Sprintf("%s%s%-5.5s", " Words", "=", res2string(r.Words))
-		output += fmt.Sprintf("%s%s%-5.5s", " Lines", "=", res2string(r.Lines))
+		output += fmt.Sprintf("%s %-6.8s", " C", res2string(r.Chars)) // note to self: color for result int64s add about 10 spaces
+		output += fmt.Sprintf("%s %-5.5s", " W", res2string(r.Words))
+		output += fmt.Sprintf("%s %-5.5s", " L", res2string(r.Lines))
 	}
 	output += fmt.Sprintf("%-30s", parseurl(r.URL))
 	output += "\n"
