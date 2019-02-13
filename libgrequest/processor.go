@@ -2,6 +2,7 @@ package libgrequest
 
 import (
 	"fmt"
+	"sync"
 )
 
 // Processor : channel controlcenter
@@ -9,6 +10,8 @@ func Processor(s *State) {
 	N := TotalRequests(s.Fuzzer.Maxes)
 	urlc := make(chan string)
 	codec := make(chan *int, s.Threads)
+	procw := new(sync.WaitGroup)
+	procw.Add(s.Threads)
 
 	go func() { GetURL(s, 0, s.URL, urlc) }() // Payload is just a string with 'FUZZ'
 
@@ -18,13 +21,16 @@ func Processor(s *State) {
 				// if s.Terminate == true {break}
 				code, _ := GoGet(s, <-urlc, s.Cookies)
 				codec <- code
+				
 			}
 		}()
+		procw.Done()
 	}
 	for r := 0; r < N; r++ {
 		<-codec
 		fmt.Printf("[+] requests: %d/%d\r", s.Counter.v, N)
 	}
+	procw.Wait()
 }
 
 //TODO: add --recursive
