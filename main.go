@@ -2,10 +2,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"time"
-	"fmt"
 
 	"github.com/braaaax/gofuzz/libgrequest"
 )
@@ -55,7 +55,7 @@ func main() {
 		start := time.Now()
 		libgrequest.Processor(s)
 		elapsed := time.Since(start)
-		fmt.Printf("\n[+] Requests took: %s\n", elapsed)
+		fmt.Printf("\n[+] Time elapsed: %s\n", elapsed)
 	} else {
 		libgrequest.PrintHelp()
 	}
