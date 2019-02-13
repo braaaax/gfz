@@ -13,7 +13,7 @@ build for windows:
 
 most basic usage:
 
-`gofuzz -w wordlist1 -w wordlist2 http://someip/FUZZFUZ2Z`
+`gofuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
 
 
 ```
@@ -39,7 +39,7 @@ Options:
 
 Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
           gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z
-          gofuzz -t 32 -k -w somelist.txt https://someTLSsite.com/FUZZ
+          gofuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
 ```
 
 foreign lib: 
