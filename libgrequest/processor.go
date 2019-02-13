@@ -17,7 +17,7 @@ func Processor(s *State) {
 			for {
 				// if s.Terminate == true {break}
 				code, _ := GoGet(s, <-urlc, s.Cookies)
-				codec<-code
+				codec <- code
 			}
 		}()
 	}

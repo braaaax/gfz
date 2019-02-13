@@ -103,12 +103,13 @@ func getFUZZreq(s *State, u string) (*http.Request, error) {
 	if err != nil {
 		return nil, nil
 	}
-	s.Counter.Inc()
+	// s.Counter.Inc()
 	return req, err
 }
 
 // makeRequest : make http request
 func makeRequest(s *State, fullURL, cookie string) (*int, error) {
+	s.Counter.Inc()
 	req, err := getFUZZreq(s, fullURL)
 	if err != nil {
 		return nil, nil
@@ -135,11 +136,14 @@ func makeRequest(s *State, fullURL, cookie string) (*int, error) {
 		return nil, nil
 	}
 	defer resp.Body.Close()
+
 	r, err := InitResult(fullURL, resp)
-	if err == nil {
-		if s.Quiet != true {
-			s.Printer(s, r)
-		}
+	if err != nil {
+		return nil, nil
+	}
+	// Print output
+	if s.Quiet != true {
+		s.Printer(s, r)
 	}
 	return &resp.StatusCode, nil
 }
