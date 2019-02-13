@@ -2,13 +2,11 @@ package libgrequest
 
 import (
 	"crypto/tls"
-	// "io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
-	// "unicode/utf8"
 )
 
 func (s *State) setPayload(str string) {
@@ -115,10 +113,8 @@ func ParseWordlistArgs(str string, s *State) bool {
 	}
 	if len(s.Fuzzer.Wordlists) != 0 {
 		return true
-	} else {
-		return false
 	}
-	//return true
+	return false
 }
 
 // Validate : final input error checks before run.

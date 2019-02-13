@@ -19,7 +19,6 @@ func GetURL(s *State, currentloop int, u string, uchan chan string) {
 	if currentloop == len(s.Fuzzer.Indexes) {
 		for i := 0; i < currentloop; i++ {
 			u = freplace(u, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
-			// s.fpayloadhandler(s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
 			s.Payload = freplace(s.Payload, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
 		}
 		uchan <- u
