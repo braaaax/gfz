@@ -55,7 +55,7 @@ func main() {
 		start := time.Now()
 		libgrequest.Processor(s)
 		elapsed := time.Since(start)
-		fmt.Printf("\nRequests took: %s\n", elapsed)
+		fmt.Printf("\n[+] Requests took: %s\n", elapsed)
 	} else {
 		libgrequest.PrintHelp()
 	}
