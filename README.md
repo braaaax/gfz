@@ -23,7 +23,6 @@ Options:
 --hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.
 --sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.
 -t N                          : Specify the number of concurrent connections (10 default).
--p URL                        : Specify proxy URL.
 -b COOKIE                     : Specify cookie.
 -ua USERAGENT                 : Specify user agent.
 --password PASSWORD           : Specify password for basic web auth.

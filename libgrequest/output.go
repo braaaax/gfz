@@ -24,8 +24,10 @@ func PrintChars(s *State, r *Result) {
 	if s.Filter.Contains(r.Chars) == s.Show {
 		if s.NoColor {
 			PrintNoColorFn(s, r)
+		} else {
+			PrintColorFn(s, r)
 		}
-		PrintColorFn(s, r)
+		
 	}
 }
 
@@ -34,8 +36,10 @@ func PrintWords(s *State, r *Result) {
 	if s.Filter.Contains(r.Words) == s.Show {
 		if s.NoColor {
 			PrintNoColorFn(s, r)
+		} else {
+			PrintColorFn(s, r)
 		}
-		PrintColorFn(s, r)
+		
 	}
 }
 
@@ -44,8 +48,10 @@ func PrintStatus(s *State, r *Result) {
 	if s.Filter.Contains(r.Code) == s.Show { // issue nil
 		if s.NoColor {
 			PrintNoColorFn(s, r)
+		} else {
+			PrintColorFn(s, r)
 		}
-		PrintColorFn(s, r)
+		
 	}
 }
 
@@ -54,8 +60,10 @@ func PrintLines(s *State, r *Result) {
 	if s.Filter.Contains(r.Lines) == s.Show {
 		if s.NoColor {
 			PrintNoColorFn(s, r)
+		} else {
+			PrintColorFn(s, r)
 		}
-		PrintColorFn(s, r)
+		
 	}
 }
 

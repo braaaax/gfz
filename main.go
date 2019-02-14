@@ -16,10 +16,10 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Counter = libgrequest.InitSafeCounter()
 	s.Fuzzer = libgrequest.InitFuzz()
 	s.FollowRedirect = !libgrequest.ArgBool(str, "--no-follow") // !lazydefault1: follow redirect
-	s.URL = libgrequest.ArgString(str, " htt(p|ps).+")
+	s.URL = libgrequest.ArgString(str, "htt(p|ps).+")
 	s.InsecureSSL = !libgrequest.ArgBool(str, "-k") // !lazydefault2: skip verify
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
-	proxy := libgrequest.ArgString(str, "-p.htt(p|ps)://(.)*")
+	proxy := libgrequest.ArgString(str, "-p.htt(p|ps).+") // TODO
 	s.Quiet = libgrequest.ArgBool(str, "-q")
 	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
 	s.Password = libgrequest.ArgString(str, "--password.[a-zA-Z0-9=/?]*")
