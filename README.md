@@ -34,7 +34,7 @@ Options:
 --username USERNAME           : Specify username.
 --no-follow                   : Don't follow HTTP redirections.
 --no-color                    : Monotone output.
--k                            : Strict TLS connections (skip verify = false).
+-k                            : Strict TLS connections (default: skip verify = false).
 -q                            : Quiet mode.
 
 Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
