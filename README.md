@@ -7,10 +7,6 @@ build:
 
 `go build`
 
-build for windows: 
-
-`GOOS=windows GOARCH=amd64 go build -o gofuzz.exe`
-
 most basic usage:
 
 `gofuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
