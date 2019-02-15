@@ -37,5 +37,5 @@ Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?u
           gofuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
 ```
 
-foreign lib: 
+dependency: 
 `github.com/fatih/color`
