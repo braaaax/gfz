@@ -1,4 +1,4 @@
-/*replicate the basic functionalities of wfuzz in go*/
+/*replicate the basic functionalities of wfuzz*/
 package main
 
 import (
@@ -27,7 +27,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
 	s.NoColor = libgrequest.ArgBool(str, "--no-color")
 	s.PrintBody = libgrequest.ArgBool(str, "--print-body")
-	// s.Recursive = libgrequest.ArgBool(str, "-r")
+	// s.Recursive = libgrequest.ArgBool(str, "-r") TODO
 	s.PostForm = libgrequest.ArgBool(str, "--post-form")
 	s.PostMulti = libgrequest.ArgBool(str, "--post-multipart")
 
@@ -43,7 +43,6 @@ func ParseCmdLine(str string) *libgrequest.State {
 }
 
 func main() {
-	// start := time.Now()
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
 	if s != nil && len(os.Args) > 1 {

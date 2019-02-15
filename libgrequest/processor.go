@@ -8,29 +8,29 @@ import (
 // Processor : channel controlcenter
 func Processor(s *State) {
 	N := TotalRequests(s.Fuzzer.Maxes)
-	urlc := make(chan string)
-	codec := make(chan *int, s.Threads)
-	procw := new(sync.WaitGroup)
-	procw.Add(s.Threads)
+	urlCh := make(chan string)
+	codeCh := make(chan *int, s.Threads)
+	procWG := new(sync.WaitGroup)
+	procWG.Add(s.Threads)
 
-	go func() { GetURL(s, 0, s.URL, urlc) }() // Payload is just a string with 'FUZZ'
+	go func() { GetURL(s, 0, s.URL, urlCh) }() // Payload is just a string with 'FUZZ'
 
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
 				// if s.Terminate == true {break}
-				code, _ := GoGet(s, <-urlc, s.Cookies)
-				codec <- code
-				
+				code, _ := GoGet(s, <-urlCh, s.Cookies)
+				codeCh <- code
+
 			}
 		}()
-		procw.Done()
+		procWG.Done()
 	}
 	for r := 0; r < N; r++ {
-		<-codec
+		<-codeCh
 		fmt.Printf("[+] requests: %d/%d\r", s.Counter.v, N)
 	}
-	procw.Wait()
+	procWG.Wait()
 }
 
 //TODO: add --recursive

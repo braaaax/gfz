@@ -27,7 +27,6 @@ func PrintChars(s *State, r *Result) {
 		} else {
 			PrintColorFn(s, r)
 		}
-		
 	}
 }
 
@@ -39,7 +38,6 @@ func PrintWords(s *State, r *Result) {
 		} else {
 			PrintColorFn(s, r)
 		}
-		
 	}
 }
 
@@ -51,7 +49,6 @@ func PrintStatus(s *State, r *Result) {
 		} else {
 			PrintColorFn(s, r)
 		}
-		
 	}
 }
 
@@ -63,7 +60,6 @@ func PrintLines(s *State, r *Result) {
 		} else {
 			PrintColorFn(s, r)
 		}
-		
 	}
 }
 
@@ -98,8 +94,6 @@ func WriteToFile(output string, s *State) {
 // PrintNoColorFn : print page into to stdout
 func PrintNoColorFn(s *State, r *Result) {
 	output := ""
-	//output += fmt.Sprintf("%d", s.Counter.v)
-
 	if !s.NoStatus {
 		code := strconv.FormatInt(r.Code, 10)
 		output += fmt.Sprintf(" Code %-10s ", code)
@@ -134,17 +128,14 @@ func PrintColorFn(s *State, r *Result) {
 	}
 
 	// color funcs
-	// hiblk := color.New(color.FgHiBlack).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
 	red := color.New(color.FgHiRed).SprintFunc()
-	// white := color.New(color.FgHiWhite).SprintFunc()
 	cyan := color.New(color.FgHiCyan).SprintFunc()
 
 	// write output line
 	code := res2string(r.Code)
 	output := ""
-	// output += fmt.Sprintf("%d. ", s.Counter.v)
 
 	if !s.NoStatus {
 		if strings.HasPrefix(code, "2") {

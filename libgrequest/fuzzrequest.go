@@ -1,3 +1,5 @@
+/* A few of the below functions are heavilly influenced by OJ's code in gobuster */
+
 package libgrequest
 
 import (
@@ -11,7 +13,6 @@ import (
 	"strings"
 )
 
-// the below functions are heavilly influenced by OJ's code in gobuster
 // RedirectHandler :
 type RedirectHandler struct {
 	Transport http.RoundTripper
@@ -47,7 +48,7 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 func getFUZZreq(s *State, u string) (*http.Request, error) {
 	if s.Post {
 		if s.PostForm {
-			// TODO: configer payload string
+			// TODO: config payload string
 			v := url.Values{}
 			pairs := strings.Split(s.Payload, ",")
 			for i := range pairs {
@@ -99,11 +100,11 @@ func getFUZZreq(s *State, u string) (*http.Request, error) {
 			return req, err
 		}
 	}
+	// If GET request
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil
 	}
-	// s.Counter.Inc()
 	return req, err
 }
 
@@ -141,7 +142,7 @@ func makeRequest(s *State, fullURL, cookie string) (*int, error) {
 	if err != nil {
 		return nil, nil
 	}
-	// Print output
+	// Print Output
 	if s.Quiet != true {
 		s.Printer(s, r)
 	}

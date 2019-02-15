@@ -1,3 +1,5 @@
+/* A few of the structs below are heavilly influenced by OJ's code in gobuster */
+
 package libgrequest
 
 import (
@@ -12,9 +14,6 @@ import (
 	"sync"
 	"unicode/utf8"
 )
-
-// MethodProc :
-//type MethodProc func(*State, string, string) (*int, *Result)
 
 // ProcFunc :
 type ProcFunc func(*State, string, chan<- Result)
@@ -78,7 +77,6 @@ func (s *State) readfile(fname string) error {
 		//if !filt.MatchString(w){
 		//	lines = append(lines, w)
 		//}
-		// fmt.Println(w)
 	}
 	s.Fuzzer.Wordlists = append(s.Fuzzer.Wordlists, lines)
 	return nil
@@ -166,12 +164,12 @@ func InitResult(fullURL string, resp *http.Response) (*Result, error) {
 	return r, nil
 }
 
-// IntSet : Set value maps int64 to bool.
+// IntSet : Set value maps int64 to bool (from gobuster).
 type IntSet struct {
 	Set map[int64]bool
 }
 
-// StringSet : Set value maps string to bool.
+// StringSet : Set value maps string to bool (from gobuster).
 type StringSet struct {
 	Set map[string]bool
 }

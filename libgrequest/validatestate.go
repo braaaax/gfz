@@ -58,7 +58,6 @@ func ParseWordlistArgs(str string, s *State) bool {
 	var payloadpat = "(-z file,[/0-9a-zA-Z._-]*|-z File,[/0-9a-zA-Z._-]*|-z FILE,[/0-9a-zA-Z._-]*|-z list,[a-zA-Z0-9.-]*|-z List,[a-zA-Z0-9.-]*|-z LIST,[a-zA-Z0-9.-]*|-z range,[0-9-]*|-z Range,[0-9-]*|-z RANGE,[0-9-]*|-w [/0-9a-zA-Z._-]*)"
 	payload := regexp.MustCompile(payloadpat)
 	match := payload.FindAllString(str, -1)
-	// fmt.Println("match:", zfile.FindAllString(str, -1))
 	for N := 0; N < len(match); N++ {
 		if zfile.MatchString(match[N]) {
 			if s.readfile(match[N][len("-z file,"):]) != nil {
@@ -104,13 +103,16 @@ func ParseWordlistArgs(str string, s *State) bool {
 	if len(match) == 1 {
 		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0) // just one payload/file
 	} else {
-		//
+		// if more than one FUZZ
 		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, len(s.Fuzzer.Wordlists))
-		s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+		for i := 1; i < len(s.Fuzzer.Wordlists); i++ {
+			s.Fuzzer.Indexes = append(s.Fuzzer.Indexes, 0)
+		}
 	}
 	for _, i := range s.Fuzzer.Wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
+	// fmt.Println("Maxes", s.Fuzzer.Maxes)
 	if len(s.Fuzzer.Wordlists) != 0 {
 		return true
 	}
@@ -140,7 +142,7 @@ func Validate(s *State, argstr, proxy string) bool {
 		convPrintFilter(s, "200,301,302,403")
 
 	}
-	// set proxy info
+	// set proxy info TODO parse urls at the cmdline
 	var proxyURLFunc func(*http.Request) (*url.URL, error)
 	proxyURLFunc = http.ProxyFromEnvironment
 	if proxy != "" {
