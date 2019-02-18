@@ -21,7 +21,6 @@ func Processor(s *State) {
 				// if s.Terminate == true {break}
 				code, _ := GoGet(s, <-urlCh, s.Cookies)
 				codeCh <- code
-
 			}
 		}()
 		procWG.Done()
