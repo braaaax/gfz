@@ -96,7 +96,6 @@ func InitState() *State {
 		Post:           false,
 		PostForm:       false,
 		PostMulti:      false,
-		Payload:        "",
 	}
 }
 

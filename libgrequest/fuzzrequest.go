@@ -111,7 +111,10 @@ func getFUZZreq(s *State, u string) (*http.Request, error) {
 // makeRequest : make http request
 func makeRequest(s *State, fullURL, cookie string) (*int, error) {
 	s.Counter.Inc()
-	req, err := getFUZZreq(s, fullURL)
+	req, err := http.NewRequest("GET", fullURL, nil)
+	if err != nil {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, nil
 	}

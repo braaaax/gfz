@@ -103,7 +103,7 @@ func PrintNoColorFn(s *State, r *Result) {
 		output += fmt.Sprintf(" W %-6.8s", res2string(r.Words))
 		output += fmt.Sprintf(" L %-6.8s", res2string(r.Lines))
 	}
-	output += fmt.Sprintf("%-30s", parseurl(r.URL))
+	output += fmt.Sprintf("%-30s", r.URL)
 	output += "\n"
 	if s.PrintBody == true {
 		output += "\n"
@@ -159,7 +159,7 @@ func PrintColorFn(s *State, r *Result) {
 		output += fmt.Sprintf("%s %-5.5s", " W", res2string(r.Words))
 		output += fmt.Sprintf("%s %-5.5s", " L", res2string(r.Lines))
 	}
-	output += fmt.Sprintf("%-30s", parseurl(r.URL))
+	output += fmt.Sprintf("%-30s", r.URL)
 	output += "\n"
 
 	if s.PrintBody == true {
