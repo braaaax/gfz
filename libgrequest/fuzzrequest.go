@@ -45,6 +45,7 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 	return resp, err
 }
 
+// TODO: less redundant code
 func makePostFormRequest(s *State, fullURL, cookie string) (*int, error) {
 	s.Counter.Inc()
 	v := url.Values{}
