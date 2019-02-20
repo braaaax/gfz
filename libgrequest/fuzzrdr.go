@@ -15,16 +15,21 @@ func freplace(payload, newword string) string {
 }
 
 // GetURL : Recursive function, feeds urls for GoGet into string channel.
-func GetURL(s *State, currentloop int, u string, uchan chan string) {
+func GetURL(s *State, currentloop int, payload string, uchan chan string) {
 	if currentloop == len(s.Fuzzer.Indexes) {
 		for i := 0; i < currentloop; i++ {
-			u = freplace(u, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
-			// s.Payload = freplace(s.Payload, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
+			payload = freplace(payload, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
+			s.Payload = payload
 		}
-		uchan <- u
+		if s.Post {
+			uchan <- s.URL
+		} else {
+			uchan <- s.Payload
+		}
+
 	} else {
 		for s.Fuzzer.Indexes[currentloop] = 0; s.Fuzzer.Indexes[currentloop] != s.Fuzzer.Maxes[currentloop]; s.Fuzzer.Indexes[currentloop]++ {
-			GetURL(s, currentloop+1, u, uchan)
+			GetURL(s, currentloop+1, payload, uchan)
 		}
 	}
 }

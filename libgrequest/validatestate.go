@@ -10,8 +10,8 @@ import (
 )
 
 func (s *State) setPayload(str string) {
-	var patpostform = "--post-form [a-zA-Z0-9-=,]*"
-	var patmultpart = "--post-multipart [a-zA-Z0-9-.]*"
+	var patpostform = "--post-form [a-zA-Z0-9-=,]+"
+	var patmultpart = "--post-multipart [a-zA-Z0-9-.]+"
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
 	postform := regexp.MustCompile(patpostform)
 	multpartform := regexp.MustCompile(patmultpart)
@@ -164,6 +164,15 @@ func Validate(s *State, argstr, proxy string) bool {
 		},
 	}
 	s.setPayload(argstr)
+
+	if s.PostForm {
+		s.Request = GoPostForm
+	} else if s.PostMulti {
+		s.Request = GoPostMultiPart
+	} else {
+		s.Request = GoGet
+	}
+
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

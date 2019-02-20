@@ -15,8 +15,8 @@ import (
 	"unicode/utf8"
 )
 
-// ProcFunc :
-type ProcFunc func(*State, string, chan<- Result)
+// RequestFunc :
+type RequestFunc func(s *State, url, cookie string) (*int, error)
 
 // PrintResultFunc : abstraction layer to handle printing different filters
 type PrintResultFunc func(s *State, r *Result)
@@ -45,7 +45,7 @@ type State struct {
 	Post           bool
 	PostForm       bool
 	PostMulti      bool
-	Processor      ProcFunc
+	Request        RequestFunc
 	WildcardIps    StringSet
 	Show           bool
 	Printer        PrintResultFunc
@@ -96,9 +96,9 @@ func InitState() *State {
 		Post:           false,
 		PostForm:       false,
 		PostMulti:      false,
+		Payload:        "",
 	}
 }
-
 
 // SafeCounter is safe to use concurrently.
 type SafeCounter struct {

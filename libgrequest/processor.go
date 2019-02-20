@@ -19,7 +19,7 @@ func Processor(s *State) {
 		go func() {
 			for {
 				// if s.Terminate == true {break}
-				code, _ := GoGet(s, <-urlCh, s.Cookies)
+				code, _ := s.Request(s, <-urlCh, s.Cookies)
 				codeCh <- code
 			}
 		}()
