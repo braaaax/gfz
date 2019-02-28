@@ -85,7 +85,7 @@ func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error
 	}
 	defer resp.Body.Close()
 
-	r, err := InitResult(fullURL, resp)
+	r, err := InitResult(payload, resp)
 	if err != nil {
 		return nil, nil
 	}
@@ -152,7 +152,7 @@ func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, erro
 	}
 	defer resp.Body.Close()
 
-	r, err := InitResult(fullURL, resp)
+	r, err := InitResult(payload, resp)
 	if err != nil {
 		return nil, nil
 	}
