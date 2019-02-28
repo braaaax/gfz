@@ -133,6 +133,8 @@ func PrintHelp() {
 	fmt.Println("--hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.")
 	fmt.Println("--sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.")
 	fmt.Println("-t N                          : Specify the number of concurrent connections (10 default).")
+	fmt.Println("--post-form key=FUZZ          : Specify form value eg key=value.")
+	fmt.Println("--post-multipart file.FUZZ    : Fuzz filename for file uploads.")
 	// fmt.Println("-p URL                        : Specify proxy URL.") TODO: need better cmdline parse for two URLs
 	fmt.Println("-b COOKIE                     : Specify cookie.")
 	fmt.Println("-ua USERAGENT                 : Specify user agent.")
