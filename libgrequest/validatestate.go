@@ -113,7 +113,6 @@ func ParseWordlistArgs(str string, s *State) bool {
 	for _, i := range s.Fuzzer.Wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
-	// fmt.Println("Maxes", s.Fuzzer.Maxes)
 	if len(s.Fuzzer.Wordlists) != 0 {
 		return true
 	}
