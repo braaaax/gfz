@@ -7,12 +7,14 @@ build:
 
 `go build`
 
-most basic usage:
+basic usage:
 
 `gofuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
 
 
 ```
+[+] Author: brax (https://github.com/braaaax/gofuzz)
+
 Usage:   gofuzz [options] <url>
 Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.
 
@@ -23,18 +25,22 @@ Options:
 --hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.
 --sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.
 -t N                          : Specify the number of concurrent connections (10 default).
+--post-form key=FUZZ          : Specify form value eg key=value.
+--post-multipart file.FUZZ    : Fuzz filename for file uploads.
 -b COOKIE                     : Specify cookie.
 -ua USERAGENT                 : Specify user agent.
 --password PASSWORD           : Specify password for basic web auth.
 --username USERNAME           : Specify username.
---no-follow                   : Don't follow HTTP redirections.
+--no-follow                   : Don't follow HTTP(S) redirections.
 --no-color                    : Monotone output.
--k                            : Strict TLS connections (default: skip verify = false).
--q                            : Quiet mode.
+--print-body                  : Print response body to stdout.
+-k                            : Strict TLS connections (skip verify=false).
+-q                            : No output.
 
 Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
-          gofuzz --follow -z file,default/common.txt -z file,default/ext.txt http://somesite.com/FUZZFUZ2Z
+          gofuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z
           gofuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
+          gofuzz --print-body --sc 200 --post-form "name=FUZZ" -z file,somelist.txt http://somesite.com/form
 ```
 
 dependency: 
