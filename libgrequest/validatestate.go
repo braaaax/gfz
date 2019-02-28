@@ -163,7 +163,11 @@ func Validate(s *State, argstr, proxy string) bool {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
+	
 	s.setPayload(argstr)
+	if len(s.Payload) == 0 {
+		s.Payload = s.URL
+	}
 
 	if s.PostForm {
 		s.Request = GoPostForm

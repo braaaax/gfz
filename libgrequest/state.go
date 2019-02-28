@@ -16,7 +16,7 @@ import (
 )
 
 // RequestFunc :
-type RequestFunc func(s *State, url, cookie string) (*int, error)
+type RequestFunc func(s *State, url, cookie, payload string) (*int, error)
 
 // PrintResultFunc : abstraction layer to handle printing different filters
 type PrintResultFunc func(s *State, r *Result)

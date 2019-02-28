@@ -13,14 +13,19 @@ func Processor(s *State) {
 	procWG := new(sync.WaitGroup)
 	procWG.Add(s.Threads)
 
-	go func() { GetURL(s, 0, s.URL, urlCh) }() // Payload is just a string with 'FUZZ'
+	go func() { GetURL(s, 0, s.Payload, urlCh) }() // Payload is just a string with 'FUZZ'
 
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
 				// if s.Terminate == true {break}
-				code, _ := s.Request(s, <-urlCh, s.Cookies)
-				codeCh <- code
+				if s.Post{
+					code, _ := s.Request(s, s.URL, s.Cookies, <-urlCh)
+				    codeCh <- code
+				} else {
+					code, _ := s.Request(s, <-urlCh, s.Cookies, s.Payload)
+				    codeCh <- code
+				}
 			}
 		}()
 		procWG.Done()

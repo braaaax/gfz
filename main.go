@@ -46,6 +46,7 @@ func main() {
 	argstr := os.Args
 	s := ParseCmdLine(strings.Join(argstr, " "))
 	if s != nil && len(os.Args) > 1 {
+		fmt.Printf("%+v\n", s)
 		if s.NoColor {
 			libgrequest.PrintTopNoColor(s)
 		} else {

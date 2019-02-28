@@ -93,6 +93,7 @@ func mustOpen(f string) *os.File {
 	return r
 }
 
+// TotalRequests :
 func TotalRequests(maxes []int) int {
 	c := 1
 	for i := range maxes {
@@ -111,6 +112,7 @@ func PrintTopColor(s *State) {
 	fmt.Printf("\n")
 }
 
+// PrintTopNoColor :
 func PrintTopNoColor(s *State) {
 	wordlists := strings.Join(s.WordListFiles, ", ")
 	fmt.Printf("\n")

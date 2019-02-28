@@ -46,10 +46,10 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 }
 
 // TODO: less redundant code
-func makePostFormRequest(s *State, fullURL, cookie string) (*int, error) {
+func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error) {
 	s.Counter.Inc()
 	v := url.Values{}
-	pairs := strings.Split(s.Payload, ",")
+	pairs := strings.Split(payload, ",")
 	for i := range pairs {
 		kv := strings.Split(pairs[i], "=")
 		if len(kv) == 2 {
@@ -96,12 +96,12 @@ func makePostFormRequest(s *State, fullURL, cookie string) (*int, error) {
 	return &resp.StatusCode, nil
 }
 
-func makePostMultiRequest(s *State, fullURL, cookie string) (*int, error) {
+func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, error) {
 	s.Counter.Inc()
 	var err error
 	values := map[string]io.Reader{
 		// "file":  mustOpen("main.go"), // lets assume its this file
-		"other": strings.NewReader(s.Payload),
+		payload: strings.NewReader(""),
 	}
 	var b bytes.Buffer
 	multipartw := multipart.NewWriter(&b)
@@ -164,7 +164,7 @@ func makePostMultiRequest(s *State, fullURL, cookie string) (*int, error) {
 }
 
 // makeRequest : make http request
-func makeRequest(s *State, fullURL, cookie string) (*int, error) {
+func makeRequest(s *State, fullURL, cookie, payload string) (*int, error) {
 	s.Counter.Inc()
 	req, err := http.NewRequest("GET", fullURL, nil)
 	if err != nil {
@@ -205,16 +205,16 @@ func makeRequest(s *State, fullURL, cookie string) (*int, error) {
 }
 
 // GoGet : returs address of response statuscode and error
-func GoGet(s *State, url, cookie string) (*int, error) {
-	return makeRequest(s, url, cookie)
+func GoGet(s *State, url, cookie, payload string) (*int, error) {
+	return makeRequest(s, url, cookie, payload)
 }
 
 // GoPostForm :
-func GoPostForm(s *State, url, cookie string) (*int, error) {
-	return makePostFormRequest(s, url, cookie)
+func GoPostForm(s *State, url, cookie, payload string) (*int, error) {
+	return makePostFormRequest(s, url, cookie, payload)
 }
 
 // GoPostMultiPart :
-func GoPostMultiPart(s *State, url, cookie string) (*int, error) {
-	return makePostMultiRequest(s, url, cookie)
+func GoPostMultiPart(s *State, url, cookie, payload string) (*int, error) {
+	return makePostMultiRequest(s, url, cookie, payload)
 }

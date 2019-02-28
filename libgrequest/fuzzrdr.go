@@ -3,6 +3,7 @@ package libgrequest
 import (
 	"regexp"
 	"strings"
+	"fmt"
 )
 
 func freplace(payload, newword string) string {
@@ -19,13 +20,9 @@ func GetURL(s *State, currentloop int, payload string, uchan chan string) {
 	if currentloop == len(s.Fuzzer.Indexes) {
 		for i := 0; i < currentloop; i++ {
 			payload = freplace(payload, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
-			s.Payload = payload
-		}
-		if s.Post {
-			uchan <- s.URL
-		} else {
-			uchan <- s.Payload
-		}
+		}	
+		fmt.Println("PAYLOAD", payload)
+		uchan <- payload
 
 	} else {
 		for s.Fuzzer.Indexes[currentloop] = 0; s.Fuzzer.Indexes[currentloop] != s.Fuzzer.Maxes[currentloop]; s.Fuzzer.Indexes[currentloop]++ {
