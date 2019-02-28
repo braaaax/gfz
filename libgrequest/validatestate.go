@@ -28,17 +28,18 @@ func (s *State) setPayload(str string) {
 		return
 	}
 	if multpartform.MatchString(str) {
-		f := mustOpen(multpartform.FindString(str)[len("--post-multipart "):])
-		b := []byte{}
-		somebytes, _ := f.Read(b)
-		s.Payload = string(somebytes)
-		if len(s.Payload) > 0 {
-			if FUZZre.MatchString(s.Payload) {
-				s.Post = true
-				s.PostMulti = true
-			}
+		// f := mustOpen(multpartform.FindString(str)[len("--post-multipart "):])
+		// b := []byte{}
+		// somebytes, _ := f.Read(b)
+		// s.Payload = string(somebytes)
+		// if len(s.Payload) > 0 {
+		s.Payload = multpartform.FindString(str)[len("--post-multipart "):]
+		if FUZZre.MatchString(s.Payload) {
+			s.Post = true
+			s.PostMulti = true
 		}
-		defer f.Close()
+		// }
+		// defer f.Close()
 		return
 	}
 }
@@ -163,18 +164,15 @@ func Validate(s *State, argstr, proxy string) bool {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-	
-	s.setPayload(argstr)
-	if len(s.Payload) == 0 {
-		s.Payload = s.URL
-	}
 
+	s.setPayload(argstr)
 	if s.PostForm {
 		s.Request = GoPostForm
 	} else if s.PostMulti {
 		s.Request = GoPostMultiPart
 	} else {
 		s.Request = GoGet
+		s.Payload = s.URL
 	}
 
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
