@@ -121,11 +121,10 @@ func ParseWordlistArgs(str string, s *State) bool {
 
 // Validate : final input error checks before run.
 func Validate(s *State, argstr, proxy string) bool {
-	help := regexp.MustCompile("(-h|--help)")
+	help := regexp.MustCompile("(--help)")
 	if help.MatchString(argstr) {
 		return false
 	}
-
 	// parse output filter args
 	f := regexp.MustCompile("--(hc|sc|hl|sl|hw|sw|hh|sh).[0-9a-zA-Z(,|)]*")
 	RawFilterStringArgs := f.FindString(argstr)
@@ -173,7 +172,7 @@ func Validate(s *State, argstr, proxy string) bool {
 		s.Request = GoGet
 		s.Payload = s.URL
 	}
-
+	
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

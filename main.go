@@ -56,6 +56,7 @@ func main() {
 		elapsed := time.Since(start)
 		fmt.Printf("\n[+] Time elapsed: %s\n", elapsed)
 	} else {
+		fmt.Println("s:", s,"args:", os.Args)
 		libgrequest.PrintHelp()
 	}
 }
