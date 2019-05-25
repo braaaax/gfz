@@ -19,7 +19,7 @@ func GetURL(s *State, currentloop int, payload string, uchan chan string) {
 	if currentloop == len(s.Fuzzer.Indexes) {
 		for i := 0; i < currentloop; i++ {
 			payload = freplace(payload, s.Fuzzer.Wordlists[i][s.Fuzzer.Indexes[i]])
-		}	
+		}
 		uchan <- payload
 
 	} else {

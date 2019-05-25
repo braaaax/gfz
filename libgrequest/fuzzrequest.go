@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	// "encoding/base64"
 )
 
 // RedirectHandler :
@@ -47,6 +48,7 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 
 // TODO: less redundant code
 func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error) {
+	// fmt.Println(payload)
 	s.Counter.Inc()
 	v := url.Values{}
 	pairs := strings.Split(payload, ",")
@@ -59,7 +61,7 @@ func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error
 	encv := v.Encode()
 	req, err := http.NewRequest("POST", fullURL, strings.NewReader(encv))
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	if cookie != "" {
@@ -166,7 +168,7 @@ func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, erro
 // makeRequest : make http request
 func makeRequest(s *State, fullURL, cookie, payload string) (*int, error) {
 	s.Counter.Inc()
-	req, err := http.NewRequest("GET", fullURL, nil)
+	req, err := http.NewRequest(s.Method, fullURL, nil)
 	if err != nil {
 		return nil, nil
 	}

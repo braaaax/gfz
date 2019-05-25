@@ -21,16 +21,28 @@ func ParseCmdLine(str string) *libgrequest.State {
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
 	proxy := libgrequest.ArgString(str, "-p.htt(p|ps).+") // TODO
 	s.Quiet = libgrequest.ArgBool(str, "-q")
-	s.Cookies = libgrequest.ArgString(str, "-b.[a-zA-Z0-9=/?]*")
+	s.Cookies = libgrequest.ArgString(str, "-b [a-zA-Z0-9=/?]*")
+	if len(s.Cookies) > len("-b ") {
+		s.Cookies = s.Cookies[len("-b "):]
+	}
 	s.Password = libgrequest.ArgString(str, "--password.[a-zA-Z0-9=/?]*")
+	if len(s.Password) > len("--password."){
+		s.Password = s.Password[len("--password."):]
+	}
 	s.Username = libgrequest.ArgString(str, "--username.[a-zA-Z0-9=/?]*")
+	if len(s.Username) > len("--username."){
+		s.Username = s.Username[len("--username."):]
+	}
 	s.UserAgent = libgrequest.ArgString(str, "-ua.[a-zA-Z]+")
+	if len(s.UserAgent) > len("-ua.") {
+		s.UserAgent = s.UserAgent[len("-ua."):]
+	}
 	s.NoColor = libgrequest.ArgBool(str, "--no-color")
 	s.PrintBody = libgrequest.ArgBool(str, "--print-body")
 	// s.Recursive = libgrequest.ArgBool(str, "-r") TODO
+	s.Post = libgrequest.ArgBool(str, "--post")
 	s.PostForm = libgrequest.ArgBool(str, "--post-form")
 	s.PostMulti = libgrequest.ArgBool(str, "--post-multipart")
-
 	if threads > 0 {
 		s.Threads = threads
 	} else {
@@ -56,7 +68,7 @@ func main() {
 		elapsed := time.Since(start)
 		fmt.Printf("\n[+] Time elapsed: %s\n", elapsed)
 	} else {
-		fmt.Println("s:", s,"args:", os.Args)
+		fmt.Println("s:", s, "args:", os.Args)
 		libgrequest.PrintHelp()
 	}
 }

@@ -93,6 +93,7 @@ func ParseWordlistArgs(str string, s *State) bool {
 			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-w "):])
 		}
+		
 		// after payload for loop
 	}
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
@@ -169,10 +170,11 @@ func Validate(s *State, argstr, proxy string) bool {
 	} else if s.PostMulti {
 		s.Request = GoPostMultiPart
 	} else {
+		if s.Post {s.Method = "POST"} else {s.Method = "GET"}
 		s.Request = GoGet
 		s.Payload = s.URL
 	}
-	
+
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

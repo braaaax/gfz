@@ -59,6 +59,7 @@ type State struct {
 	Counter        *SafeCounter
 	FUZZs          []string
 	Fuzzer         *Fuzz
+	Method         string
 }
 
 func (s *State) readfile(fname string) error {
