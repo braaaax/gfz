@@ -3,12 +3,10 @@ Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 get:
 `go get github.com/braaaax/gofuzz`
 
-build:
-
+build:  
 `go build`
 
-basic usage:
-
+basic usage: 
 `gofuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
 
 
@@ -43,5 +41,3 @@ Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?u
           gofuzz --print-body --sc 200 --post-form "name=FUZZ" -z file,somelist.txt http://somesite.com/form
 ```
 
-dependency: 
-`github.com/fatih/color`
