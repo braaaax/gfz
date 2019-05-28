@@ -1,5 +1,5 @@
 
-![](https://gph.is/g/EGyNJwd)
+![](https://github.com/braaaax/gfuzz/my.gif)
 
 Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 
