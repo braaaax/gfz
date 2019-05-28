@@ -5,7 +5,7 @@ Gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster
 Install: 
 `go get github.com/braaaax/gfuzz && go build`  
 Basic Usage: 
-`gfuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
+`gfuzz -z file,wordlist1 -z list,-.php http://someip/FUZZ/FUZ2Z`
 
 
 ```
@@ -34,7 +34,7 @@ Options:
 -q                            : No output.
 
 Examples: gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
-          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z
+          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZ/FUZ2Z
           gfuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
           gfuzz --print-body --sc 200 --post-form "name=FUZZ" -z file,somelist.txt http://somesite.com/form
           gfuzz --post -b mycookie -ua normalbrowser --username admin --password FUZZ -z list,admin-password http://somesite.com
