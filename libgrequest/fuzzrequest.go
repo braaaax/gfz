@@ -166,19 +166,38 @@ func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, erro
 }
 
 // makeRequest : make http request
-func makeRequest(s *State, fullURL, cookie, payload string) (*int, error) {
+func makeRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 	s.Counter.Inc()
+	fmt.Println("URL", fullURL, "cookie", cookie, "payload", cmdline)
+
+	if s.Fuzzer.Cmdline[0] {
+		fullURL = ArgString(cmdline, "htt(p|ps)[^\t\n\f\r ]+$")
+	}
 	req, err := http.NewRequest(s.Method, fullURL, nil)
 	if err != nil {
 		return nil, nil
 	}
 	if cookie != "" {
-		req.Header.Set("Cookie", cookie)
+		if s.Fuzzer.Cmdline[1] {
+			cookie = ArgString(cmdline, "-b [^\t\n\f\r ]+")[len("-b "):]
+		} else {
+			req.Header.Set("Cookie", cookie)
+		}
 	}
 	if s.UserAgent != "" {
-		req.Header.Set("User-Agent", s.UserAgent)
+		if s.Fuzzer.Cmdline[4] {
+			s.UserAgent = ArgString(cmdline, "-ua [^\t\n\f\r ]+")[len("-ua."):]
+		} else {
+			req.Header.Set("User-Agent", s.UserAgent)
+		}
 	}
 	if s.Username != "" {
+		if s.Fuzzer.Cmdline[3] {
+			s.Username = ArgString(cmdline, "--username [^\t\n\f\r ]+")[len("--username."):]
+		}
+		if s.Fuzzer.Cmdline[2] {
+			s.Password = ArgString(cmdline, "--password [^\t\n\f\r ]+")[len("--password."):]
+		}
 		req.SetBasicAuth(s.Username, s.Password)
 	}
 	resp, err := s.Client.Do(req)

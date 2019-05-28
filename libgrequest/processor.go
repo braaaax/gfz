@@ -8,23 +8,23 @@ import (
 // Processor : channel controlcenter
 func Processor(s *State) {
 	N := TotalRequests(s.Fuzzer.Maxes)
-	urlCh := make(chan string)
+	payloadCh := make(chan string)
 	codeCh := make(chan *int, s.Threads)
 	procWG := new(sync.WaitGroup)
 	procWG.Add(s.Threads)
 
-	go func() { GetURL(s, 0, s.Payload, urlCh) }() // Payload is just a string with 'FUZZ'
+	go func() { GetURL(s, 0, s.Commandline, payloadCh) }() // Payload is just a string with 'FUZZ'
 
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
 				// if s.Terminate == true {break}
-				if s.Post{
-					code, _ := s.Request(s, s.URL, s.Cookies, <-urlCh)
-				    codeCh <- code
+				if s.Post {
+					code, _ := s.Request(s, s.URL, s.Cookies, <-payloadCh)
+					codeCh <- code
 				} else {
-					code, _ := s.Request(s, <-urlCh, s.Cookies, s.Payload)
-				    codeCh <- code
+					code, _ := s.Request(s, s.Payload, s.Cookies, <-payloadCh)
+					codeCh <- code
 				}
 			}
 		}()

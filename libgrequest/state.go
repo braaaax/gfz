@@ -60,6 +60,7 @@ type State struct {
 	FUZZs          []string
 	Fuzzer         *Fuzz
 	Method         string
+	Commandline    string
 }
 
 func (s *State) readfile(fname string) error {
@@ -125,6 +126,7 @@ type Fuzz struct {
 	Wordlists [][]string
 	Indexes   []int
 	Maxes     []int
+	Cmdline   []bool
 }
 
 // InitFuzz : init the Fuzz struct.

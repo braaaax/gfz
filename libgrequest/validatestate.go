@@ -7,11 +7,12 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	//"fmt"
 )
 
 func (s *State) setPayload(str string) {
-	var patpostform = "--post-form [a-zA-Z0-9-=,]+"
-	var patmultpart = "--post-multipart [a-zA-Z0-9-.]+"
+	var patpostform = "--post-form [^\t\n\f\r ]+"
+	var patmultpart = "--post-multipart [^\t\n\f\r ]+"
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
 	postform := regexp.MustCompile(patpostform)
 	multpartform := regexp.MustCompile(patmultpart)
@@ -46,17 +47,17 @@ func (s *State) setPayload(str string) {
 
 // ParseWordlistArgs : set UrlFuzz Wordlists FuzzMap
 func ParseWordlistArgs(str string, s *State) bool {
-	var patzfile = "-z (file|File|FILE),[/0-9a-zA-Z._-]*"
+	var patzfile = "-z (file|File|FILE),[^\t\n\f\r ]+"
 	var patzrange = "-z (range|Range|RANGE),[0-9-]*" // put a limit
-	var patzlist = "-z (list|List|LIST),[a-zA-Z0-9.-]*"
-	var patwfile = "-w [/0-9a-zA-Z._-]*"
+	var patzlist = "-z (list|List|LIST),[^\t\n\f\r ]+"
+	var patwfile = "-w [^\t\n\f\r ]+"
 	zlistwordlist := []string{}
 	zrangewordlist := []string{}
 	zfile := regexp.MustCompile(patzfile)
 	zrange := regexp.MustCompile(patzrange)
 	wfile := regexp.MustCompile(patwfile)
 	zlist := regexp.MustCompile(patzlist)
-	var payloadpat = "(-z file,[/0-9a-zA-Z._-]*|-z File,[/0-9a-zA-Z._-]*|-z FILE,[/0-9a-zA-Z._-]*|-z list,[a-zA-Z0-9.-]*|-z List,[a-zA-Z0-9.-]*|-z LIST,[a-zA-Z0-9.-]*|-z range,[0-9-]*|-z Range,[0-9-]*|-z RANGE,[0-9-]*|-w [/0-9a-zA-Z._-]*)"
+	var payloadpat = "(-z file,[^\t\n\f\r ]+|-z File,[^\t\n\f\r ]+|-z FILE,[^\t\n\f\r ]+|-z list,[^\t\n\f\r ]+|-z List,[^\t\n\f\r ]+|-z LIST,[^\t\n\f\r ]+|-z range,[0-9-]*|-z Range,[0-9-]*|-z RANGE,[0-9-]*|-w [^\t\n\f\r ]+)"
 	payload := regexp.MustCompile(payloadpat)
 	match := payload.FindAllString(str, -1)
 	for N := 0; N < len(match); N++ {
@@ -114,6 +115,9 @@ func ParseWordlistArgs(str string, s *State) bool {
 	for _, i := range s.Fuzzer.Wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
+	/*fmt.Println("s.Fuzzer.Indexes", s.Fuzzer.Indexes)
+	fmt.Println("s.Fuzzer.Wordlists", s.Fuzzer.Maxes)
+	fmt.Println("s.Fuzzer.Maxes", s.Fuzzer.Maxes)*/
 	if len(s.Fuzzer.Wordlists) != 0 {
 		return true
 	}
@@ -172,7 +176,7 @@ func Validate(s *State, argstr, proxy string) bool {
 	} else {
 		if s.Post {s.Method = "POST"} else {s.Method = "GET"}
 		s.Request = GoGet
-		s.Payload = s.URL
+		// s.Payload = s.URL
 	}
 
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
