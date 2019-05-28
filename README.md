@@ -22,7 +22,6 @@ Options:
 --sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.
 -t N                          : Specify the number of concurrent connections (10 default).
 --post-form key=FUZZ          : Specify form value eg key=value.
---post-multipart file.FUZZ    : Fuzz filename for file uploads.
 -b COOKIE                     : Specify cookie.
 -ua USERAGENT                 : Specify user agent.
 --password PASSWORD           : Specify password for basic web auth.
