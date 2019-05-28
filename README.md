@@ -1,20 +1,20 @@
 Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 
-get:
-`go get github.com/braaaax/gofuzz`
+get:  
+`go get github.com/braaaax/gfuzz`
 
 build:  
 `go build`
 
-basic usage: 
-`gofuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
+basic usage:  
+`gfuzz -z file,wordlist1 -z list,-.php http://someip/FUZZFUZ2Z`
 
 
 ```
-[+] Author: brax (https://github.com/braaaax/gofuzz)
+[+] Author: brax (https://github.com/braaaax/gfuzz)
 
-Usage:   gofuzz [options] <url>
-Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gofuzz will replace them with the values of the specified payload.
+Usage:   gfuzz [options] <url>
+Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gfuzz will replace them with the values of the specified payload.
 
 Options:
 -h/--help                     : This help.
@@ -35,9 +35,9 @@ Options:
 -k                            : Strict TLS connections (skip verify=false).
 -q                            : No output.
 
-Examples: gofuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
-          gofuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z
-          gofuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
-          gofuzz --print-body --sc 200 --post-form "name=FUZZ" -z file,somelist.txt http://somesite.com/form
+Examples: gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z
+          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z
+          gfuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ
+          gfuzz --print-body --sc 200 --post-form "name=FUZZ" -z file,somelist.txt http://somesite.com/form
 ```
 
