@@ -1,3 +1,6 @@
+
+![](https://gph.is/g/EGyNJwd)
+
 Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 
 get:  
