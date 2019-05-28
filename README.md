@@ -7,7 +7,8 @@
 <img src="https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif">
 </p>
 
-gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster.  
+**gfuzz** aims to reproduce wfuzz's functionality and versatility and combine it with the concurrency of go. It can be used to fuzz GET or POST request headers, including UserAgent, Cookies, and Username and Password for basic auth.
+
 Install: 
 `go get github.com/braaaax/gfuzz && go build`  
 Basic Usage: 
@@ -27,6 +28,7 @@ Options:
 --hc/hl/hw/hh N[,N]+          : Hide responses with the specified code, lines, words, or chars.
 --sc/sl/sw/sh N[,N]]+         : Show responses with the specified code, lines, words, or chars.
 -t N                          : Specify the number of concurrent connections (10 default).
+--post                        : Specify POST method.
 --post-form key=FUZZ          : Specify form value eg key=value.
 -b COOKIE                     : Specify cookie.
 -ua USERAGENT                 : Specify user agent.
