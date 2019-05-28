@@ -1,7 +1,9 @@
 
+# **GFUZZ**
+
 ![](https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif)
 
-Gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster.  
+gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster.  
 Install: 
 `go get github.com/braaaax/gfuzz && go build`  
 Basic Usage: 
