@@ -19,13 +19,8 @@ func Processor(s *State) {
 		go func() {
 			for {
 				// if s.Terminate == true {break}
-				if s.Post {
-					code, _ := s.Request(s, s.URL, s.Cookies, <-payloadCh)
-					codeCh <- code
-				} else {
-					code, _ := s.Request(s, s.Payload, s.Cookies, <-payloadCh)
-					codeCh <- code
-				}
+				code, _ := s.Request(s, s.URL, s.Cookies, <-payloadCh)
+				codeCh <- code
 			}
 		}()
 		procWG.Done()

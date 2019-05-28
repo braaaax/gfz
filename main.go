@@ -36,7 +36,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	if len(proxy) > len("-p "){
 		proxy = proxy[len("-p "):]
 	}
-	fmt.Println("proxy:", proxy)
+	// fmt.Println("proxy:", proxy)
 	s.Quiet = libgrequest.ArgBool(str, "-q")
 	s.Cookies = libgrequest.ArgString(str, "-b [^\t\n\f\r ]+")
 	if len(s.Cookies) > len("-b ") {

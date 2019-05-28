@@ -176,7 +176,6 @@ func Validate(s *State, argstr, proxy string) bool {
 	} else {
 		if s.Post {s.Method = "POST"} else {s.Method = "GET"}
 		s.Request = GoGet
-		// s.Payload = s.URL
 	}
 
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {

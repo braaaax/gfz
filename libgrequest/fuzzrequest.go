@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"regexp"
 	// "encoding/base64"
 )
 
@@ -47,9 +48,12 @@ func (rh *RedirectHandler) RoundTrip(req *http.Request) (resp *http.Response, er
 }
 
 // TODO: less redundant code
-func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error) {
+func makePostFormRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 	// fmt.Println(payload)
 	s.Counter.Inc()
+	var patpostform = "--post-form [^\t\n\f\r ]+"
+	postform := regexp.MustCompile(patpostform)
+	payload := postform.FindString(cmdline)[len("--post-form "):]
 	v := url.Values{}
 	pairs := strings.Split(payload, ",")
 	for i := range pairs {
@@ -64,15 +68,32 @@ func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	
 	if cookie != "" {
-		req.Header.Set("Cookie", cookie)
+		if s.Fuzzer.Cmdline[1] {
+			cookie = ArgString(cmdline, "-b [^\t\n\f\r ]+")[len("-b "):]
+		} else {
+			req.Header.Set("Cookie", cookie)
+		}
 	}
 	if s.UserAgent != "" {
-		req.Header.Set("User-Agent", s.UserAgent)
+		if s.Fuzzer.Cmdline[4] {
+			s.UserAgent = ArgString(cmdline, "-ua [^\t\n\f\r ]+")[len("-ua."):]
+		} else {
+			req.Header.Set("User-Agent", s.UserAgent)
+		}
 	}
 	if s.Username != "" {
+		if s.Fuzzer.Cmdline[3] {
+			s.Username = ArgString(cmdline, "--username [^\t\n\f\r ]+")[len("--username."):]
+		}
+		if s.Fuzzer.Cmdline[2] {
+			s.Password = ArgString(cmdline, "--password [^\t\n\f\r ]+")[len("--password."):]
+		}
 		req.SetBasicAuth(s.Username, s.Password)
 	}
+	
+	
 	resp, err := s.Client.Do(req)
 	if err != nil {
 		if ue, ok := err.(*url.Error); ok {
@@ -98,8 +119,11 @@ func makePostFormRequest(s *State, fullURL, cookie, payload string) (*int, error
 	return &resp.StatusCode, nil
 }
 
-func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, error) {
+func makePostMultiRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 	s.Counter.Inc()
+	var patmultpart = "--post-multipart [^\t\n\f\r ]+"
+	multpartform := regexp.MustCompile(patmultpart)
+	var payload = multpartform.FindString(cmdline)[len("--post-multipart "):]
 	var err error
 	values := map[string]io.Reader{
 		// "file":  mustOpen("main.go"), // lets assume its this file
@@ -132,12 +156,26 @@ func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, erro
 	}
 	req.Header.Add("Content-Type", multipartw.FormDataContentType())
 	if cookie != "" {
-		req.Header.Set("Cookie", cookie)
+		if s.Fuzzer.Cmdline[1] {
+			cookie = ArgString(cmdline, "-b [^\t\n\f\r ]+")[len("-b "):]
+		} else {
+			req.Header.Set("Cookie", cookie)
+		}
 	}
 	if s.UserAgent != "" {
-		req.Header.Set("User-Agent", s.UserAgent)
+		if s.Fuzzer.Cmdline[4] {
+			s.UserAgent = ArgString(cmdline, "-ua [^\t\n\f\r ]+")[len("-ua."):]
+		} else {
+			req.Header.Set("User-Agent", s.UserAgent)
+		}
 	}
 	if s.Username != "" {
+		if s.Fuzzer.Cmdline[3] {
+			s.Username = ArgString(cmdline, "--username [^\t\n\f\r ]+")[len("--username."):]
+		}
+		if s.Fuzzer.Cmdline[2] {
+			s.Password = ArgString(cmdline, "--password [^\t\n\f\r ]+")[len("--password."):]
+		}
 		req.SetBasicAuth(s.Username, s.Password)
 	}
 	resp, err := s.Client.Do(req)
@@ -168,7 +206,7 @@ func makePostMultiRequest(s *State, fullURL, cookie, payload string) (*int, erro
 // makeRequest : make http request
 func makeRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 	s.Counter.Inc()
-	fmt.Println("URL", fullURL, "cookie", cookie, "payload", cmdline)
+	//fmt.Println("URL:", fullURL, "cookies:", cookie,"payload:", cmdline)
 
 	if s.Fuzzer.Cmdline[0] {
 		fullURL = ArgString(cmdline, "htt(p|ps)[^\t\n\f\r ]+$")
