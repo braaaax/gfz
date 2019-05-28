@@ -1,7 +1,7 @@
 
-![](https://github.com/braaaax/gfuzz/my.gif)
+![](https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif)
 
-Aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
+Gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster.
 
 get:  
 `go get github.com/braaaax/gfuzz`
