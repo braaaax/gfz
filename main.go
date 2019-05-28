@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/braaaax/gofuzz/libgrequest"
+	"github.com/braaaax/gfuzz/libgrequest"
 )
 
 // ParseCmdLine : eval cmdline arguments
