@@ -1,7 +1,11 @@
 
 # **GFUZZ**
 
-![](https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif)
+<!---![](https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif)--->
+
+<p align="center">
+<img src="https://media.giphy.com/media/lIUbFDEyeBpBLDTuTe/giphy.gif">
+</p>
 
 gfuzz aims to reproduce wfuzz's functionality and versatility. Based on gobuster.  
 Install: 
