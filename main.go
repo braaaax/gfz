@@ -72,14 +72,12 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Headers = make(map[string]string)
 	reHeaders := regexp.MustCompile("-H [^\t\n\f\r ]+")
 	match := reHeaders.FindAllString(str, -1)
-	fmt.Println(match)
 	if len(match) > 0 {
 		for i := range match {
 			res := strings.Split(match[i], ":")
 			s.Headers[strings.Replace(res[0][len("H "):], " ", "", -1)] = strings.Replace(res[1], " ", "", -1)
 		}
 	}
-	fmt.Println(s.Headers)
 
 	s.NoColor = libgrequest.ArgBool(str, "--no-color")
 	s.PrintBody = libgrequest.ArgBool(str, "--print-body")

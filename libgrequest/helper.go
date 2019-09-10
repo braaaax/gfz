@@ -24,7 +24,6 @@ func ArgBool(s, p string) bool {
 
 // ArgString : Turn commandline pat into string
 
-
 func ArgString(s, p string) string {
 	re := regexp.MustCompile(p)
 	match := re.FindAllString(s, -1)
@@ -138,16 +137,17 @@ func PrintHelp() {
 	fmt.Println("--post                        : Specify POST request method.")
 	fmt.Println("--post-form key=FUZZ          : Specify form value eg key=value.")
 	// fmt.Println("--post-multipart file.FUZZ    : Fuzz filename for file uploads.")
-	// fmt.Println("-p URL                        : Specify proxy URL.") TODO: need better cmdline parse for two URLs
+	fmt.Println("-p IP:PORT                    : Specify proxy.") // TODO: need better cmdline parse for two URLs
 	fmt.Println("-b COOKIE                     : Specify cookie.")
 	fmt.Println("-ua USERAGENT                 : Specify user agent.")
 	fmt.Println("--password PASSWORD           : Specify password for basic web auth.")
 	fmt.Println("--username USERNAME           : Specify username.")
 	fmt.Println("--no-follow                   : Don't follow HTTP(S) redirections.")
-	fmt.Println("--no-color                    : Monotone output.")
+	fmt.Println("--no-color                    : Monotone output. (use for windows")
 	fmt.Println("--print-body                  : Print response body to stdout.")
-	fmt.Println("-k                            : Strict TLS connections (skip verify=false).")
+	fmt.Println("-k                            : Strict TLS connections (skip verify=false opposite of curl).")
 	fmt.Println("-q                            : No output.")
+	fmt.Println("-H                            : Add headers.")
 	fmt.Printf("\n")
 	fmt.Println("Examples: gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 	fmt.Println("          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z")
