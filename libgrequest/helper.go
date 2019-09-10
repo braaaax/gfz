@@ -23,6 +23,8 @@ func ArgBool(s, p string) bool {
 }
 
 // ArgString : Turn commandline pat into string
+
+
 func ArgString(s, p string) string {
 	re := regexp.MustCompile(p)
 	match := re.FindAllString(s, -1)

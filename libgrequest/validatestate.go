@@ -2,12 +2,12 @@ package libgrequest
 
 import (
 	"crypto/tls"
+	// "fmt"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
-	//"fmt"
 )
 
 func (s *State) setPayload(str string) {
@@ -66,7 +66,6 @@ func ParseWordlistArgs(str string, s *State) bool {
 				return false
 			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-z file,"):])
-
 		}
 		if zrange.MatchString(match[N]) {
 			numRE := regexp.MustCompile("[0-9]+")
@@ -94,7 +93,6 @@ func ParseWordlistArgs(str string, s *State) bool {
 			}
 			s.WordListFiles = append(s.WordListFiles, match[N][len("-w "):])
 		}
-		
 		// after payload for loop
 	}
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
@@ -115,9 +113,6 @@ func ParseWordlistArgs(str string, s *State) bool {
 	for _, i := range s.Fuzzer.Wordlists {
 		s.Fuzzer.Maxes = append(s.Fuzzer.Maxes, len(i))
 	}
-	/*fmt.Println("s.Fuzzer.Indexes", s.Fuzzer.Indexes)
-	fmt.Println("s.Fuzzer.Wordlists", s.Fuzzer.Maxes)
-	fmt.Println("s.Fuzzer.Maxes", s.Fuzzer.Maxes)*/
 	if len(s.Fuzzer.Wordlists) != 0 {
 		return true
 	}
@@ -151,6 +146,7 @@ func Validate(s *State, argstr, proxy string) bool {
 	proxyURLFunc = http.ProxyFromEnvironment
 	if proxy != "" {
 		proxyURL, err := url.Parse(proxy)
+		// fmt.Println(proxy)
 		if err != nil {
 			panic("[!] proxy URL is fucked")
 		}
@@ -167,17 +163,19 @@ func Validate(s *State, argstr, proxy string) bool {
 					InsecureSkipVerify: s.InsecureSSL}},
 		},
 	}
-
 	s.setPayload(argstr)
 	if s.PostForm {
 		s.Request = GoPostForm
 	} else if s.PostMulti {
 		s.Request = GoPostMultiPart
 	} else {
-		if s.Post {s.Method = "POST"} else {s.Method = "GET"}
+		if s.Post {
+			s.Method = "POST"
+		} else {
+			s.Method = "GET"
+		}
 		s.Request = GoGet
 	}
-
 	if len(s.Fuzzer.Wordlists) != 0 || ParseWordlistArgs(argstr, s) != false {
 		return true
 	}

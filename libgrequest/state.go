@@ -61,6 +61,7 @@ type State struct {
 	Fuzzer         *Fuzz
 	Method         string
 	Commandline    string
+	Headers        map[string]string
 }
 
 func (s *State) readfile(fname string) error {

@@ -238,6 +238,12 @@ func makeRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 		}
 		req.SetBasicAuth(s.Username, s.Password)
 	}
+	if len(s.Headers) > 0 {
+		for k,v := range s.Headers {
+			req.Header.Set(k, v)
+		}
+	}
+
 	resp, err := s.Client.Do(req)
 	if err != nil {
 		if ue, ok := err.(*url.Error); ok {

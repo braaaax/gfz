@@ -12,9 +12,9 @@ func Processor(s *State) {
 	codeCh := make(chan *int, s.Threads)
 	procWG := new(sync.WaitGroup)
 	procWG.Add(s.Threads)
-
-	go func() { GetURL(s, 0, s.Commandline, payloadCh) }() // Payload is just a string with 'FUZZ'
-
+    //TODO: add --recursive
+	go func() { GetURL(s, 0, s.Commandline, payloadCh) }()
+	
 	for i := 0; i < s.Threads; i++ {
 		go func() {
 			for {
@@ -32,4 +32,4 @@ func Processor(s *State) {
 	procWG.Wait()
 }
 
-//TODO: add --recursive
+
