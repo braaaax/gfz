@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 	"regexp"
+	"strings"
 	// "encoding/base64"
 )
 
@@ -68,7 +68,7 @@ func makePostFormRequest(s *State, fullURL, cookie, cmdline string) (*int, error
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	
+
 	if cookie != "" {
 		if s.Fuzzer.Cmdline[1] {
 			cookie = ArgString(cmdline, "-b [^\t\n\f\r ]+")[len("-b "):]
@@ -92,8 +92,13 @@ func makePostFormRequest(s *State, fullURL, cookie, cmdline string) (*int, error
 		}
 		req.SetBasicAuth(s.Username, s.Password)
 	}
-	
-	
+	if len(s.Headers) > 0 {
+		for k, v := range s.Headers {
+			// fmt.Println("key", v, "value", v)
+			req.Header.Set(k, v)
+		}
+	}
+
 	resp, err := s.Client.Do(req)
 	if err != nil {
 		if ue, ok := err.(*url.Error); ok {
@@ -239,7 +244,8 @@ func makeRequest(s *State, fullURL, cookie, cmdline string) (*int, error) {
 		req.SetBasicAuth(s.Username, s.Password)
 	}
 	if len(s.Headers) > 0 {
-		for k,v := range s.Headers {
+		for k, v := range s.Headers {
+			fmt.Println("key", v, "value", v)
 			req.Header.Set(k, v)
 		}
 	}

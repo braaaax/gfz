@@ -147,7 +147,7 @@ func PrintHelp() {
 	fmt.Println("--print-body                  : Print response body to stdout.")
 	fmt.Println("-k                            : Strict TLS connections (skip verify=false opposite of curl).")
 	fmt.Println("-q                            : No output.")
-	fmt.Println("-H                            : Add headers.")
+	fmt.Println("-H                            : Add headers. (e.g. Key:Value)")
 	fmt.Printf("\n")
 	fmt.Println("Examples: gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
 	fmt.Println("          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z")

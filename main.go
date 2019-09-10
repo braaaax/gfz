@@ -72,6 +72,7 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Headers = make(map[string]string)
 	reHeaders := regexp.MustCompile("-H [^\t\n\f\r ]+")
 	match := reHeaders.FindAllString(str, -1)
+	// fmt.Println(match)
 	if len(match) > 0 {
 		for i := range match {
 			res := strings.Split(match[i], ":")
