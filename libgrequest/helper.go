@@ -124,8 +124,8 @@ func PrintTopNoColor(s *State) {
 
 // PrintHelp : cli help info
 func PrintHelp() {
-	fmt.Printf("[+] Author: brax (https://github.com/braaaax/gfuzz)\n")
-	fmt.Printf("\nUsage:   gfuzz [options] <url>\n")
+	fmt.Printf("[+] Author: brax (https://github.com/braaaax/gfz)\n")
+	fmt.Printf("\nUsage:   gfz [options] <url>\n")
 	fmt.Printf("Keyword: FUZZ, ..., FUZnZ  wherever you put these keywords gfuzz will replace them with the values of the specified payload.\n\n")
 	fmt.Printf("Options:\n")
 	fmt.Println("-h/--help                     : This help.")
@@ -149,9 +149,9 @@ func PrintHelp() {
 	fmt.Println("-q                            : No output.")
 	fmt.Println("-H                            : Add headers. (e.g. Key:Value)")
 	fmt.Printf("\n")
-	fmt.Println("Examples: gfuzz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
-	fmt.Println("          gfuzz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z")
-	fmt.Println("          gfuzz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ")
-	fmt.Println("          gfuzz --print-body --sc 200 --post-form \"name=FUZZ\" -z file,somelist.txt http://somesite.com/form")
-	fmt.Println("          gfuzz --post -b mycookie -ua normalbrowser --username admin --password FUZZ -z list,admin-password http://somesite.com")
+	fmt.Println("Examples: gfz -w users.txt -w pass.txt --sc 200 http://www.site.com/log.asp?user=FUZZ&pass=FUZ2Z")
+	fmt.Println("          gfz -z file,default/common.txt -z list,-.php http://somesite.com/FUZZFUZ2Z")
+	fmt.Println("          gfz -t 32 -w somelist.txt https://someTLSsite.com/FUZZ")
+	fmt.Println("          gfz --print-body --sc 200 --post-form \"name=FUZZ\" -z file,somelist.txt http://somesite.com/form")
+	fmt.Println("          gfz --post -b mycookie -ua normalbrowser --username admin --password FUZZ -z list,admin-password http://somesite.com")
 }

@@ -18,8 +18,8 @@ func ParseCmdLine(str string) *libgrequest.State {
 	s.Fuzzer = libgrequest.InitFuzz()
 	s.Commandline = str
 	FUZZre := regexp.MustCompile("FUZ(Z|[0-9]Z)")
-	s.FollowRedirect = !libgrequest.ArgBool(str, "--no-follow") // !lazydefault1: follow redirect
-	s.URL = libgrequest.ArgString(str, "htt(p|ps)[^\t\n\f\r ]+$")
+	s.FollowRedirect = !libgrequest.ArgBool(str, "--no-follow")   // !lazydefault1: follow redirect
+	s.URL = libgrequest.ArgString(str, "htt(p|ps)[^\t\n\f\r ]+$") // htt(p|ps).[/a-zA-Z0-9:.]*
 	if len(FUZZre.FindAllString(s.URL, -1)) > 0 {
 		s.Fuzzer.Cmdline = append(s.Fuzzer.Cmdline, true)
 	} else {
@@ -27,10 +27,10 @@ func ParseCmdLine(str string) *libgrequest.State {
 	}
 	s.InsecureSSL = !libgrequest.ArgBool(str, "-k") // !lazydefault2: skip verify
 	threads := libgrequest.ArgInt(str, "-t.[0-9]*")
-	proxy := libgrequest.ArgString(str, "-p [^\t\n\f\r ]+") // TODO
+	proxy := libgrequest.ArgString(str, "-p [^\t\n\f\r ]+") // TODO -p.htt(p|ps).[/a-zA-Z0-9:]*
 	if len(proxy) > len("-p ") {
 		proxy = proxy[len("-p "):]
-		proxy = "http://" + proxy
+		// proxy = "http://" + proxy
 	}
 	s.Quiet = libgrequest.ArgBool(str, "-q")
 	s.Cookies = libgrequest.ArgString(str, "-b [^\t\n\f\r ]+")
@@ -110,7 +110,6 @@ func main() {
 		elapsed := time.Since(start)
 		fmt.Printf("\n[+] Time elapsed: %s\n", elapsed)
 	} else {
-		// fmt.Println("s:", s, "args:", os.Args)
 		libgrequest.PrintHelp()
 	}
 }
